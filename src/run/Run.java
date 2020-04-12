@@ -29,8 +29,8 @@ public class Run extends Application {
             Color.GREEN
         );
         
-        GameModel.getInstance().addBackground(background);
-        GameModel.getInstance().addPlayer(player);
+        GameModel.getInstance().setBackground(background);
+        GameModel.getInstance().setPlayer(player);
         GameModel.getInstance().addBall(ball);
         
         stage.setScene(GameModel.getInstance().getScene());

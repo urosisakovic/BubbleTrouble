@@ -1,5 +1,8 @@
 package gameobjects;
 
+import game.GameModel;
+import gameobjects.weapons.Bullet;
+import gameobjects.weapons.Weapon;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -46,6 +49,14 @@ public class Player extends MovingGameObject {
                     break;
                 case LEFT:
                     this.setSpeedX(-playerSpeed);
+                    break;
+                case SPACE:
+                    Weapon weapon = new Bullet(
+                        getX() + playerHeight / 2,
+                        getY(),
+                        GameModel.getInstance().getBulletSpeed()
+                    );
+                    GameModel.getInstance().setWeapon(weapon);
                     break;
             }
         });

@@ -22,11 +22,11 @@ public class Run extends Application {
         GameModel.getInstance().addBackground(background);
         GameModel.getInstance().addPlayer(player);
         
-        GameModel.getInstance().start();
-        
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());
         stage.show();
+        
+        GameModel.getInstance().start();
     }
 
     public static void main(String[] args) {

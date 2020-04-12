@@ -174,7 +174,7 @@ public class GameModel {
 
     public float getStartBallRadius() {
         return startBallRadius;
-    }
+    }   
     
     public float getBulletSpeed() {
         return bulletSpeed;

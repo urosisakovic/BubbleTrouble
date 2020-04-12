@@ -3,6 +3,7 @@ package run;
 import game.GameModel;
 import gameobjects.*;
 import javafx.application.Application;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Run extends Application {
@@ -19,8 +20,18 @@ public class Run extends Application {
             GameModel.getInstance().getPlayerSpeed()
         );
         
+        Ball ball = new Ball(
+            GameModel.getInstance().getStartBallX(),
+            GameModel.getInstance().getStartBallY(),
+            GameModel.getInstance().getStartBallSpeedX(),
+            GameModel.getInstance().getStartBallSpeedY(),
+            GameModel.getInstance().getStartBallRadius(),
+            Color.GREEN
+        );
+        
         GameModel.getInstance().addBackground(background);
         GameModel.getInstance().addPlayer(player);
+        GameModel.getInstance().addBall(ball);
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());

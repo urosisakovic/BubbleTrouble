@@ -11,7 +11,7 @@ public class Background extends GameObject {
         Rectangle background = new Rectangle();
         background.setWidth(width);
         background.setHeight(height);
-        background.setFill(Color.RED);
+        background.setFill(Color.rgb(255, 0, 0, 0.3));
         
         this.getChildren().add(background);
     }

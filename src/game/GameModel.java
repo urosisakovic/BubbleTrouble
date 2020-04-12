@@ -3,7 +3,7 @@ package game;
 import gameobjects.Background;
 import gameobjects.Ball;
 import gameobjects.Player;
-import gameobjects.Weapon;
+import gameobjects.weapons.Weapon;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
@@ -28,6 +28,9 @@ public class GameModel {
                 if (running) {
                     if (player != null)
                         player.update();
+                    
+                    if (weapon != null)
+                        weapon.update();
 
                     balls.forEach((ball) -> {
                         ball.update();
@@ -62,6 +65,8 @@ public class GameModel {
     private final float startBallRadius = 100;
     private final Color startBallColor = Color.GREEN;
 
+    private final float bulletSpeed = -5;
+    
     // Game model logic
     private boolean running;
     private final AnimationTimer timer;
@@ -69,21 +74,35 @@ public class GameModel {
     private final Scene scene;
     private Background background;
     private Player player = null;
+    private Weapon weapon = null;
     private CopyOnWriteArrayList<Ball> balls;
     
-    public void addBackground(Background background) {
+    public void setBackground(Background background) {
         this.background = background;
         root.getChildren().add(this.background);
     }
     
-    public void addPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
         root.getChildren().add(this.player);
         player.initializeInScene(playerStartX);
     }
     
-    public void addWeapon(Weapon weapon) {
-        
+    public void setWeapon(Weapon weapon) {
+        if (weapon == null) {
+            if (this.weapon != null) {
+                root.getChildren().remove(this.weapon);
+                this.weapon = null;
+            }
+        }
+        else {
+            if (this.weapon != null)
+                root.getChildren().remove(this.weapon);
+            
+            this.weapon = weapon;
+            root.getChildren().add(this.weapon);
+            this.weapon.initializeInScene();
+        }
     }
     
     public void addBall(Ball ball) {
@@ -155,6 +174,10 @@ public class GameModel {
 
     public float getStartBallRadius() {
         return startBallRadius;
+    }
+    
+    public float getBulletSpeed() {
+        return bulletSpeed;
     }
    
 }

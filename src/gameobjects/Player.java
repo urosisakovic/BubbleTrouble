@@ -39,9 +39,7 @@ public class Player extends MovingGameObject {
     private void addControls() {
         this.setFocusTraversable(true);
         
-        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            System.out.println("Player class: Key Pressed");
-            
+        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {            
             switch (event.getCode()) {
                 case RIGHT:
                     this.setSpeedX(playerSpeed);
@@ -52,9 +50,7 @@ public class Player extends MovingGameObject {
             }
         });
         
-        this.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-            System.out.println("Player class: Key Released");
-            
+        this.addEventFilter(KeyEvent.KEY_RELEASED, event -> {            
             if (event.getCode() == KeyCode.LEFT && getSpeedX() == -playerSpeed)
                 this.setSpeedX(0);
             

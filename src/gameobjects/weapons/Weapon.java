@@ -20,7 +20,7 @@ public abstract class Weapon extends MovingGameObject {
     
     @Override
     protected void handleCollisions() {
-        if (getY() > maxY)
+        if (getY() <= 0)
             GameModel.getInstance().setWeapon(null);
     }
     

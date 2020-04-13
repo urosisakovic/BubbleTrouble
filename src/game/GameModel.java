@@ -51,7 +51,7 @@ public class GameModel {
     private final float sceneHeight = 600;
     private final float sceneWidth = 1000;
     
-    private final float playerHeight = 100;
+    private final float playerHeight = 130;
     private final float playerStartX = 100;
     private final float playerSpeed = 2;
     

@@ -1,7 +1,7 @@
 package gameobjects;
 
 import game.GameModel;
-import gameobjects.weapons.Bullet;
+import gameobjects.weapons.StraightHarpoon;
 import gameobjects.weapons.Weapon;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -52,8 +52,8 @@ public class Player extends MovingGameObject {
                     this.setSpeedX(-playerSpeed);
                     break;
                 case SPACE:
-                    Weapon weapon = new Bullet(
-                        getX() + playerHeight / 2,
+                    Weapon weapon = new StraightHarpoon(
+                        getX() + playerWidth / 2,
                         getY(),
                         GameModel.getInstance().getBulletSpeed()
                     );
@@ -71,6 +71,7 @@ public class Player extends MovingGameObject {
         });
     }
     
+    @Override
     public void initializeInScene() {
         sceneHeight = (float) this.getScene().getHeight();
         sceneWidth = (float) this.getScene().getWidth();

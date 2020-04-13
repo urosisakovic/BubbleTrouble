@@ -1,5 +1,7 @@
 package gameobjects;
 
+import game.GameModel;
+import gameobjects.weapons.Weapon;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -51,6 +53,12 @@ public class Ball extends MovingGameObject {
     }
     
     @Override
+    protected void handleCollisions() {
+        handleBorderCollisions();
+        handlePlayerCollisions();
+        handleWeaponCollisions();
+    }
+    
     protected void handleBorderCollisions() {
         if (getX() > maxX) {
             setX(maxX);
@@ -69,10 +77,21 @@ public class Ball extends MovingGameObject {
             setY(minY);
             setSpeedY(-getSpeedY());
         }
-    }
-
-    @Override
-    protected void handleObjectCollisions() {
+    }  
+    
+    private void handlePlayerCollisions() {
+        Player player = GameModel.getInstance().getPlayer();
+        
+        if (player != null)
+            if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
+                GameModel.getInstance().gameEnd();
     }
     
+    private void handleWeaponCollisions() {
+        Weapon weapon = GameModel.getInstance().getWeapon();
+        
+        if (weapon != null)
+            if (this.getBoundsInParent().intersects(weapon.getBoundsInParent()))
+                GameModel.getInstance().gameEnd();
+    }
 }

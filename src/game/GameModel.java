@@ -5,6 +5,8 @@ import gameobjects.Ball;
 import gameobjects.Player;
 import gameobjects.weapons.Weapon;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class GameModel {
 
@@ -124,13 +130,32 @@ public class GameModel {
         ball.initializeInScene();
     }
     
-    public void gameEnd() {
+    public void gameWon() {
+        Text text = new Text();
+        text.setText("You won!");
+        
+        text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
+        text.setFill(Color.GREENYELLOW);
+        
+        text.setX(0.25 * sceneWidth); 
+        text.setY(0.5 * sceneHeight); 
+        root.getChildren().add(text);
+                
         running = false;
     }
     
-    public void reset() {
-        // reset state
-        running = true;
+    public void gameLost() {
+        Text text = new Text();
+        text.setText("You lost!");
+        
+        text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
+        text.setFill(Color.RED);
+        
+        text.setX(0.25 * sceneWidth); 
+        text.setY(0.5 * sceneHeight); 
+        root.getChildren().add(text);
+                
+        running = false;
     }
     
     public String getGameName() {

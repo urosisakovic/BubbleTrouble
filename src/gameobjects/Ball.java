@@ -86,7 +86,7 @@ public class Ball extends MovingGameObject {
         
         if (player != null)
             if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
-                GameModel.getInstance().gameEnd();
+                GameModel.getInstance().gameLost();
     }
     
     private void handleWeaponCollisions() {
@@ -94,7 +94,7 @@ public class Ball extends MovingGameObject {
         
         if (weapon != null)
             if (this.getBoundsInParent().intersects(weapon.getBoundsInParent()))
-                GameModel.getInstance().gameEnd();
+                GameModel.getInstance().gameWon();
     }
 
 }

@@ -29,13 +29,14 @@ public class Run extends Application {
             GameModel.getInstance().getStartBallColor()
         );
         
-        GameModel.getInstance().setBackground(background);
-        GameModel.getInstance().setPlayer(player);
-        GameModel.getInstance().addBall(ball);
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());
         stage.show();
+        
+        GameModel.getInstance().setBackground(background);
+        GameModel.getInstance().setPlayer(player);
+        GameModel.getInstance().addBall(ball);
         
         GameModel.getInstance().start();
     }

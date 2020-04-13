@@ -60,7 +60,7 @@ public class GameModel {
     private final float sceneHeight = 600;
     private final float sceneWidth = 1000;
     
-    private final float playerHeight = 130;
+    private final float playerHeight = 90;
     private final float playerStartX = 100;
     private final float playerSpeed = 2;
     
@@ -71,8 +71,9 @@ public class GameModel {
     private final float startBallY = 100;
     private final float startBallSpeedX = 2;
     private final float startBallSpeedY = 2;
-    private final float startBallRadius = 100;
+    private final float startBallRadius = 80;
     private final Color startBallColor = Color.GREEN;
+    private final int startBallSize = 3;
 
     private final float bulletSpeed = -5;
     
@@ -128,6 +129,15 @@ public class GameModel {
         balls.add(ball);
         root.getChildren().add(ball);
         ball.initializeInScene();
+    }
+    
+    public void removeBall(Ball ball) {
+        root.getChildren().remove(ball);
+        balls.remove(ball);
+    }
+    
+    public boolean noMoreBalls() {
+        return (balls.isEmpty());
     }
     
     public void gameWon() {
@@ -230,4 +240,8 @@ public class GameModel {
         return backgroundColor;
     }
    
+    public int getStartBallSize() {
+        return startBallSize;
+    }
+    
 }

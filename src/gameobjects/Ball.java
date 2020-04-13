@@ -17,12 +17,21 @@ public class Ball extends MovingGameObject {
     private float maxY;
     private float minY;
     
-    public Ball(float x, float y, float speedX, float speedY, float radius, Color color) {
+    private int size;
+    
+    public Ball(float x, float y, float speedX, float speedY, float radius, Color color, int size) {
         super(x, y, speedX, speedY);
         this.radius = radius;
         this.color = color;
+        this.size = size;
+        
+        System.out.println("Ball constructor - radius: " + radius);
         
         draw();
+    }
+    
+    public Ball(float x, float y, float speedX, float speedY, float radius, Color color) {
+        this(x, y, speedX, speedY, radius, color, GameModel.getInstance().getStartBallSize());
     }
     
     public Ball(float x, float y, float radius, Color color) {
@@ -81,20 +90,65 @@ public class Ball extends MovingGameObject {
         }
     }  
     
+    
     private void handlePlayerCollisions() {
         Player player = GameModel.getInstance().getPlayer();
         
         if (player != null)
-            if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
+            if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
+                System.out.println("Ball: handlePlayerCollision(): BALL HIT PLAYER");
+                System.out.println("Player position: " + player.getX() + "  " + player.getY());
+                System.out.println("Player bounds: " + player.getBoundsInParent().toString());
+                System.out.println("Ball position and radius: " + getX() + "  " + getY() + "  " + radius);
+                System.out.println("Ball bounds: " + this.getBoundsInParent().toString());
                 GameModel.getInstance().gameLost();
+            }
     }
     
     private void handleWeaponCollisions() {
         Weapon weapon = GameModel.getInstance().getWeapon();
         
-        if (weapon != null)
-            if (this.getBoundsInParent().intersects(weapon.getBoundsInParent()))
-                GameModel.getInstance().gameWon();
+        if (weapon != null) {
+            if (this.getBoundsInParent().intersects(weapon.getBoundsInParent())) {
+                GameModel.getInstance().removeBall(this);
+                
+                if (size == 1) {    
+                    if (GameModel.getInstance().noMoreBalls())
+                        GameModel.getInstance().gameWon();
+                }
+                else {     
+                    System.out.println("Createing ball of radius: " + radius / 2);
+                    GameModel.getInstance().addBall(
+                        new Ball(
+                            getX(), getY(),
+                            getSpeedX(), getSpeedY(),
+                            this.radius / 2, color,
+                            size - 1
+                        )
+                    );
+                    
+                    System.out.println("Createing ball of radius: " + radius / 2);
+                    GameModel.getInstance().addBall(
+                        new Ball(
+                            getX(), getY(),
+                            -getSpeedX(), getSpeedY(),
+                            this.radius / 2, color,
+                            size - 1
+                        )
+                    );
+                }
+                
+                GameModel.getInstance().setWeapon(null);
+            }
+        }
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+    
 }

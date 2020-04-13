@@ -4,22 +4,18 @@ public abstract class MovingGameObject extends GameObject {
     
     protected float speedX, speedY;
     
-    public MovingGameObject() {
-        super();
-        this.speedX = 0;
-        this.speedY = 0;
-    }
-    
-    public MovingGameObject(float x, float y) {
-        super(x, y);
-        this.speedX = 0;
-        this.speedY = 0;
-    }
-    
     public MovingGameObject(float x, float y, float speedX, float speedY) {
         super(x, y);
         this.speedX = speedX;
         this.speedY = speedY;
+    }
+    
+    public MovingGameObject(float x, float y) {
+        this(x, y, 0, 0);
+    }
+    
+    public MovingGameObject() {
+        this(0, 0, 0, 0);
     }
 
     public float getSpeedX() {
@@ -29,7 +25,7 @@ public abstract class MovingGameObject extends GameObject {
     public void setSpeedX(float speedX) {
         this.speedX = speedX;
     }
-
+    
     public float getSpeedY() {
         return speedY;
     }
@@ -48,11 +44,6 @@ public abstract class MovingGameObject extends GameObject {
         setY(getY() + getSpeedY());
     }
     
-    public void handleCollisions() {
-        handleBorderCollisions();
-        handleObjectCollisions();
-    }
-    
-    protected abstract void handleBorderCollisions();
-    protected abstract void handleObjectCollisions();
+    public abstract void initializeInScene();
+    protected abstract void handleCollisions();
 }

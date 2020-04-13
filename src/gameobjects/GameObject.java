@@ -2,17 +2,9 @@ package gameobjects;
 
 import javafx.scene.Group;
 
-public class GameObject extends Group {
+public abstract class GameObject extends Group {
     
     protected float x, y;
-    
-    public GameObject() {
-        x = 0;
-        y = 0;
-        
-        this.setTranslateX(0);
-        this.setTranslateY(0);
-    }
     
     public GameObject(float x, float y) {
         this.x = x;
@@ -20,6 +12,10 @@ public class GameObject extends Group {
         
         this.setTranslateX(x);
         this.setTranslateY(y);
+    }
+    
+    public GameObject() {
+        this(0, 0);
     }
 
     public float getX() {
@@ -39,5 +35,7 @@ public class GameObject extends Group {
         this.y = y;
         this.setTranslateY(y);
     }
+    
+    protected abstract void draw();
     
 }

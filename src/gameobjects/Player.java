@@ -25,12 +25,13 @@ public class Player extends MovingGameObject {
         this.playerWidth = 0.6f * playerHeight;
         this.playerSpeed = playerSpeed;
         
-        drawPlayer();
+        draw();
         
         addControls();
     }
     
-    private void drawPlayer() {
+    @Override
+    protected final void draw() {
         Rectangle player = new Rectangle();
         player.setHeight(playerHeight);
         player.setWidth(playerWidth);
@@ -84,16 +85,11 @@ public class Player extends MovingGameObject {
     }
 
     @Override
-    protected void handleBorderCollisions() {
+    protected void handleCollisions() {
         if (getX() > maxX)
             setX(maxX);
         else if (getX() < minX)
             setX(minX);
     }
 
-    @Override
-    protected void handleObjectCollisions() {
-
-    }    
-    
 }

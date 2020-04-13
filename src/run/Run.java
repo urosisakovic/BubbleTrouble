@@ -3,7 +3,6 @@ package run;
 import game.GameModel;
 import gameobjects.*;
 import javafx.application.Application;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Run extends Application {
@@ -26,7 +25,7 @@ public class Run extends Application {
             GameModel.getInstance().getStartBallSpeedX(),
             GameModel.getInstance().getStartBallSpeedY(),
             GameModel.getInstance().getStartBallRadius(),
-            Color.GREEN
+            GameModel.getInstance().getStartBallColor()
         );
         
         GameModel.getInstance().setBackground(background);

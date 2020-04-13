@@ -179,5 +179,13 @@ public class GameModel {
     public float getBulletSpeed() {
         return bulletSpeed;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+    
+    public Weapon getWeapon() {
+        return weapon;
+    }
    
 }

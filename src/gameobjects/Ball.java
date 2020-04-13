@@ -22,7 +22,7 @@ public class Ball extends MovingGameObject {
         this.radius = radius;
         this.color = color;
         
-        drawBall();
+        draw();
     }
     
     public Ball(float x, float y, float radius, Color color) {
@@ -34,7 +34,8 @@ public class Ball extends MovingGameObject {
         this(0, 0, 0, 0, radius, color);
     }
     
-    private void drawBall() {
+    @Override
+    protected final void draw() {
         Circle circle = new Circle();
         circle.setRadius(radius);
         circle.setFill(color);
@@ -42,6 +43,7 @@ public class Ball extends MovingGameObject {
         this.getChildren().add(circle);
     }
     
+    @Override
     public void initializeInScene() {
         sceneHeight = (float) this.getScene().getHeight();
         sceneWidth = (float) this.getScene().getWidth();
@@ -94,4 +96,5 @@ public class Ball extends MovingGameObject {
             if (this.getBoundsInParent().intersects(weapon.getBoundsInParent()))
                 GameModel.getInstance().gameEnd();
     }
+
 }

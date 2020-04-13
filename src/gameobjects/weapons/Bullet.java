@@ -9,7 +9,7 @@ public class Bullet extends Weapon {
     }
 
     @Override
-    protected void drawWeapon() {
+    protected void draw() {
         Rectangle bullet = new Rectangle();
         bullet.setWidth(5);
         bullet.setHeight(5);

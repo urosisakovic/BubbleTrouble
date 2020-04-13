@@ -10,24 +10,18 @@ public abstract class Weapon extends MovingGameObject {
     public Weapon(float x, float y, float speedY) {
         super(x, y, 0, speedY);
         
-        drawWeapon();
+        draw();
     }
-    
-    protected abstract void drawWeapon();
-    
+        
+    @Override
     public void initializeInScene() {
         maxY = (float) this.getScene().getHeight();
     }
     
     @Override
-    protected void handleBorderCollisions() {
+    protected void handleCollisions() {
         if (getY() > maxY)
             GameModel.getInstance().setWeapon(null);
-    }
-
-    @Override
-    protected void handleObjectCollisions() {
-
     }
     
 }

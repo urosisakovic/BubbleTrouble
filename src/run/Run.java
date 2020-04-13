@@ -11,7 +11,8 @@ public class Run extends Application {
     public void start(Stage stage) throws Exception {
         Background background = new Background(
             GameModel.getInstance().getSceneWidth(), 
-            GameModel.getInstance().getSceneHeight()
+            GameModel.getInstance().getSceneHeight(),
+            GameModel.getInstance().getBackgroundColor()
         );
         
         Player player = new Player(

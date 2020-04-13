@@ -24,7 +24,7 @@ public class StraightHarpoon extends Weapon {
         
         Line rope = new Line();
         rope.setStartX(0);
-        rope.setStartY(0);
+        rope.setStartY(10);
         rope.setEndX(0);
         rope.setEndY(1000);
         rope.setStroke(Color.RED);

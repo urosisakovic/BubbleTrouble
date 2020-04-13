@@ -9,6 +9,9 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 public class GameModel {
 
@@ -66,6 +69,16 @@ public class GameModel {
     private final Color startBallColor = Color.GREEN;
 
     private final float bulletSpeed = -5;
+    
+    private final LinearGradient backgroundColor;
+    {
+        Stop[] stops = new Stop[] {
+            new Stop(0, Color.YELLOW),
+            new Stop(1, Color.BLACK)
+        };
+        
+        backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+    }
     
     // Game model logic
     private boolean running;
@@ -186,6 +199,10 @@ public class GameModel {
     
     public Weapon getWeapon() {
         return weapon;
+    }
+    
+    public LinearGradient getBackgroundColor() {
+        return backgroundColor;
     }
    
 }

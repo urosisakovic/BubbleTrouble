@@ -2,6 +2,7 @@ package gameobjects;
 
 import game.GameModel;
 import gameobjects.weapons.Weapon;
+import java.util.Random;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -24,9 +25,7 @@ public class Ball extends MovingGameObject {
         this.radius = radius;
         this.color = color;
         this.size = size;
-        
-        System.out.println("Ball constructor - radius: " + radius);
-        
+                
         draw();
     }
     
@@ -95,14 +94,47 @@ public class Ball extends MovingGameObject {
         Player player = GameModel.getInstance().getPlayer();
         
         if (player != null)
-            if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-                System.out.println("Ball: handlePlayerCollision(): BALL HIT PLAYER");
-                System.out.println("Player position: " + player.getX() + "  " + player.getY());
-                System.out.println("Player bounds: " + player.getBoundsInParent().toString());
-                System.out.println("Ball position and radius: " + getX() + "  " + getY() + "  " + radius);
-                System.out.println("Ball bounds: " + this.getBoundsInParent().toString());
+            if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
                 GameModel.getInstance().gameLost();
-            }
+    }
+    
+    private Color differentColor(Color color) {
+        Color[] colors = new Color[] {
+            Color.RED,
+            Color.AQUAMARINE,
+            Color.AQUA,
+            Color.CHOCOLATE,
+            Color.GREENYELLOW,
+            Color.BLUE,
+            Color.PURPLE,
+            Color.PINK,
+            Color.LIGHTGREY
+        };
+        
+        Random random = new Random();
+        Color diffColor;
+        while (true) {
+            diffColor = colors[Math.abs(random.nextInt()) % colors.length];
+            if (diffColor != color)
+                return diffColor;
+        }
+    }
+    
+    private void createDollarSign() {
+        double creationProbability = Math.random();
+        if (creationProbability > GameModel.getInstance().getDollarSignProb())
+            return;
+        
+        GameModel.getInstance().addDollarSign(
+            new DollarSign(
+                getX(),
+                getY(),
+                GameModel.getInstance().getDollarSignSpeed(),
+                GameModel.getInstance().getDollarSignWidth(),
+                GameModel.getInstance().getDollarSignHeight(),
+                GameModel.getInstance().getDollarSignColor()
+            )
+        );
     }
     
     private void handleWeaponCollisions() {
@@ -117,26 +149,28 @@ public class Ball extends MovingGameObject {
                         GameModel.getInstance().gameWon();
                 }
                 else {     
-                    System.out.println("Createing ball of radius: " + radius / 2);
+                    Color newColor = differentColor(this.color);
+                    
                     GameModel.getInstance().addBall(
                         new Ball(
                             getX(), getY(),
                             getSpeedX(), getSpeedY(),
-                            this.radius / 2, color,
+                            this.radius / 2, newColor,
                             size - 1
                         )
                     );
                     
-                    System.out.println("Createing ball of radius: " + radius / 2);
                     GameModel.getInstance().addBall(
                         new Ball(
                             getX(), getY(),
                             -getSpeedX(), getSpeedY(),
-                            this.radius / 2, color,
+                            this.radius / 2, newColor,
                             size - 1
                         )
                     );
                 }
+                
+                createDollarSign();
                 
                 GameModel.getInstance().setWeapon(null);
             }

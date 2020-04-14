@@ -2,11 +2,10 @@ package game;
 
 import gameobjects.Background;
 import gameobjects.Ball;
+import gameobjects.DollarSign;
 import gameobjects.Player;
 import gameobjects.weapons.Weapon;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -27,6 +26,7 @@ public class GameModel {
     private GameModel() {
         running = true;
         balls = new CopyOnWriteArrayList<>();
+        dollarSigns = new CopyOnWriteArrayList<>();
         
         root = new Group();
         scene = new Scene(root, sceneWidth, sceneHeight);
@@ -43,6 +43,10 @@ public class GameModel {
 
                     balls.forEach((ball) -> {
                         ball.update();
+                    });
+                    
+                    dollarSigns.forEach((dollarSign) -> {
+                        dollarSign.update();
                     });
                 }
             }
@@ -87,6 +91,13 @@ public class GameModel {
         backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
     }
     
+    // Dollar signs settings
+    private final float dollarSignProb = 0.16f;
+    private final float dollarSignWidth = 40;
+    private final float dollarSignHeight = 60;
+    private final float dollarSignSpeed = 0.5f;
+    private final Color dollarSignColor = Color.GREEN;
+    
     // Game model logic
     private boolean running;
     private final AnimationTimer timer;
@@ -96,6 +107,7 @@ public class GameModel {
     private Player player = null;
     private Weapon weapon = null;
     private CopyOnWriteArrayList<Ball> balls;
+    private CopyOnWriteArrayList<DollarSign> dollarSigns;
     
     public void setBackground(Background background) {
         this.background = background;
@@ -134,6 +146,17 @@ public class GameModel {
     public void removeBall(Ball ball) {
         root.getChildren().remove(ball);
         balls.remove(ball);
+    }
+    
+    public void addDollarSign(DollarSign dollarSign) {
+        dollarSigns.add(dollarSign);
+        root.getChildren().add(dollarSign);
+        dollarSign.initializeInScene();
+    }
+    
+    public void removeDollarSign(DollarSign dollarSign) {
+        root.getChildren().remove(dollarSign);
+        dollarSigns.remove(dollarSign);
     }
     
     public boolean noMoreBalls() {
@@ -242,6 +265,26 @@ public class GameModel {
    
     public int getStartBallSize() {
         return startBallSize;
+    }
+    
+    public float getDollarSignProb() {
+        return dollarSignProb;
+    }
+
+    public float getDollarSignWidth() {
+        return dollarSignWidth;
+    }
+
+    public float getDollarSignHeight() {
+        return dollarSignHeight;
+    }
+
+    public float getDollarSignSpeed() {
+        return dollarSignSpeed;
+    }
+    
+    public Color getDollarSignColor() {
+        return dollarSignColor;
     }
     
 }

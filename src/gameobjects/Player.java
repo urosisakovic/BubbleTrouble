@@ -2,8 +2,8 @@ package gameobjects;
 
 import game.GameModel;
 import gameobjects.weapons.StraightHarpoon;
+import gameobjects.weapons.CurvyHarpoon;
 import gameobjects.weapons.Weapon;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -201,7 +201,7 @@ public class Player extends MovingGameObject {
                     this.setSpeedX(-playerSpeed);
                     break;
                 case SPACE:
-                    Weapon weapon = new StraightHarpoon(
+                    Weapon weapon = new CurvyHarpoon(
                         getX() + playerWidth / 2,
                         getY(),
                         GameModel.getInstance().getBulletSpeed()

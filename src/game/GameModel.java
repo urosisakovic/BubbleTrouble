@@ -4,6 +4,7 @@ import gameobjects.Background;
 import gameobjects.Ball;
 import gameobjects.DollarSign;
 import gameobjects.Player;
+import gameobjects.ScoreSemaphore;
 import gameobjects.weapons.Weapon;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.animation.AnimationTimer;
@@ -61,24 +62,24 @@ public class GameModel {
     }
     
     // Game settings
-    private final float sceneHeight = 600;
-    private final float sceneWidth = 1000;
+    private final float sceneHeight = 700;
+    private final float sceneWidth = 1500;
     
-    private final float playerHeight = 90;
+    private final float playerHeight = sceneHeight / 7;
     private final float playerStartX = 100;
-    private final float playerSpeed = 2;
+    private final float playerSpeed = sceneWidth / 200;
     
     private final String gameName = "Bubble Trouble";
     
-    // Starting ball settins
+    // Ball settings
     private final float startBallX = 100;
     private final float startBallY = 100;
-    private final float startBallSpeedX = 2;
-    private final float startBallSpeedY = 2;
+    private final float startBallSpeedX = sceneWidth / 400;
+    private final float startBallSpeedY = sceneHeight / 250;
     private final float startBallRadius = 80;
     private final Color startBallColor = Color.GREEN;
-    private final int startBallSize = 3;
-
+    private final int startBallSize = 4;
+    private final float ballAcceleration = sceneHeight / 100;
     private final float bulletSpeed = -5;
     
     private final LinearGradient backgroundColor;
@@ -98,6 +99,10 @@ public class GameModel {
     private final float dollarSignSpeed = 0.5f;
     private final Color dollarSignColor = Color.GREEN;
     
+    // Score semaphore settings
+    private final float scoreSemaphoreX = (float) (0.78 * sceneWidth);
+    private final float scoreSemaphoreY = (float) (0.08 * sceneHeight);
+    
     // Game model logic
     private boolean running;
     private final AnimationTimer timer;
@@ -108,6 +113,29 @@ public class GameModel {
     private Weapon weapon = null;
     private CopyOnWriteArrayList<Ball> balls;
     private CopyOnWriteArrayList<DollarSign> dollarSigns;
+    private ScoreSemaphore scoreSemaphore = null;
+    
+    private int points = 0;
+    public int getPoints() {
+        return points;
+    }
+    
+    public void incrementPoints(int inc) {
+        points += inc;
+        if (scoreSemaphore != null)
+            scoreSemaphore.setPoints(points);
+    }
+    
+    public void doublePoints() {
+        points *= 2;
+        if (scoreSemaphore != null)
+            scoreSemaphore.setPoints(points);
+    }
+    
+    public void setScoreSemaphore(ScoreSemaphore scoreSemaphore) {
+        this.scoreSemaphore = scoreSemaphore;
+        root.getChildren().add(this.scoreSemaphore);
+    }
     
     public void setBackground(Background background) {
         this.background = background;
@@ -285,6 +313,18 @@ public class GameModel {
     
     public Color getDollarSignColor() {
         return dollarSignColor;
+    }
+ 
+    public float getScoreSemaphoreX() {
+        return scoreSemaphoreX;
+    }
+
+    public float getScoreSemaphoreY() {
+        return scoreSemaphoreY;
+    }
+    
+    public float getBallAcceleration() {
+        return ballAcceleration;
     }
     
 }

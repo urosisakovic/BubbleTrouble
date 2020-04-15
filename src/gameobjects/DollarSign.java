@@ -47,8 +47,10 @@ public class DollarSign extends MovingGameObject {
         Player player = GameModel.getInstance().getPlayer();
         
         if (player != null)
-            if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
+            if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
+                GameModel.getInstance().doublePoints();
                 GameModel.getInstance().removeDollarSign(this);
+            }
     }
 
     @Override

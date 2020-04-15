@@ -29,14 +29,19 @@ public class Run extends Application {
             GameModel.getInstance().getStartBallColor()
         );
         
-        
-        stage.setScene(GameModel.getInstance().getScene());
-        stage.setTitle(GameModel.getInstance().getGameName());
-        stage.show();
+        ScoreSemaphore scoreSemaphore = new ScoreSemaphore(
+            GameModel.getInstance().getScoreSemaphoreX(),
+            GameModel.getInstance().getScoreSemaphoreY()
+        );
         
         GameModel.getInstance().setBackground(background);
         GameModel.getInstance().setPlayer(player);
         GameModel.getInstance().addBall(ball);
+        GameModel.getInstance().setScoreSemaphore(scoreSemaphore);
+        
+        stage.setScene(GameModel.getInstance().getScene());
+        stage.setTitle(GameModel.getInstance().getGameName());
+        stage.show();
         
         GameModel.getInstance().start();
     }

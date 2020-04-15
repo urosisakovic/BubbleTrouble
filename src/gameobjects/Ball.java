@@ -63,6 +63,16 @@ public class Ball extends MovingGameObject {
     }
     
     @Override
+    public void update() {
+        super.update();
+        
+        if (speedY < 0)
+            speedY += 0.005 * size;
+        else
+            speedY = GameModel.getInstance().getStartBallSpeedY() * (1f + (0.2f / (float)Math.sqrt(size)));
+    }
+    
+    @Override
     protected void handleCollisions() {
         handleBorderCollisions();
         handlePlayerCollisions();
@@ -88,7 +98,6 @@ public class Ball extends MovingGameObject {
             setSpeedY(-getSpeedY());
         }
     }  
-    
     
     private void handlePlayerCollisions() {
         Player player = GameModel.getInstance().getPlayer();
@@ -137,6 +146,18 @@ public class Ball extends MovingGameObject {
         );
     }
     
+    private float calculateNewSpeedY() {
+        float newSpeedY = 0;
+        
+        if (speedY > 0)
+            newSpeedY = -1f;
+        else
+            newSpeedY = speedY * 1.1f;
+        
+        
+        return newSpeedY;
+    }
+    
     private void handleWeaponCollisions() {
         Weapon weapon = GameModel.getInstance().getWeapon();
         
@@ -144,17 +165,21 @@ public class Ball extends MovingGameObject {
             if (this.getBoundsInParent().intersects(weapon.getBoundsInParent())) {
                 GameModel.getInstance().removeBall(this);
                 
-                if (size == 1) {    
+                if (size == 1) {
+                    GameModel.getInstance().incrementPoints(10);
                     if (GameModel.getInstance().noMoreBalls())
                         GameModel.getInstance().gameWon();
                 }
-                else {     
+                else {
+                    GameModel.getInstance().incrementPoints(5);
                     Color newColor = differentColor(this.color);
+                    
+                    float newSpeedY = calculateNewSpeedY();
                     
                     GameModel.getInstance().addBall(
                         new Ball(
                             getX(), getY(),
-                            getSpeedX(), getSpeedY(),
+                            getSpeedX(), newSpeedY,
                             this.radius / 2, newColor,
                             size - 1
                         )
@@ -163,7 +188,7 @@ public class Ball extends MovingGameObject {
                     GameModel.getInstance().addBall(
                         new Ball(
                             getX(), getY(),
-                            -getSpeedX(), getSpeedY(),
+                            -getSpeedX(), newSpeedY,
                             this.radius / 2, newColor,
                             size - 1
                         )

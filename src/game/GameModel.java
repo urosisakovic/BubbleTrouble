@@ -75,7 +75,7 @@ public class GameModel {
     private final float fixBallOffset = sceneHeight / 3;
     private final float ballSizeOffset = sceneHeight / 15;
     private final int startBallSize = 4;
-    private final float startBallX = 100;
+    private final float startBallX = sceneWidth / 2;
     private final float startBallSpeedX = sceneWidth / 300;
     private final float startBallSpeedY = 0;
     private final float startBallRadius = 80;

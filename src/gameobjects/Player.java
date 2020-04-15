@@ -3,6 +3,7 @@ package gameobjects;
 import game.GameModel;
 import gameobjects.weapons.StraightHarpoon;
 import gameobjects.weapons.Weapon;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -17,6 +18,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Player extends MovingGameObject {
      
@@ -39,7 +41,7 @@ public class Player extends MovingGameObject {
         
         addControls();
     }
-    
+        
     @Override
     protected final void draw() {
         // Head
@@ -122,15 +124,19 @@ public class Player extends MovingGameObject {
         return head;
     }
     
+    
+    private float hatVerticalWidth;
+    private float hatHorizontalWidth;
+
     private Group drawHat() {
         final Color hatColor = Color.BLACK;
         
-        final float hatVerticalWidth = 2 * playerWidth / 3;
+        hatVerticalWidth = 2 * playerWidth / 3;
         final float hatVerticalHeight = playerHeight / 4;
         final float hatVerticalX = -hatVerticalWidth / 2;
         final float hatVerticalY = -hatVerticalHeight;
         
-        final float hatHorizontalWidth = playerWidth;
+        hatHorizontalWidth = playerWidth;
         final float hatHorizontalHeight = playerHeight / 12;
         final float hatHorizontalX = -hatHorizontalWidth / 2;
         final float hatHorizontalY = -2;
@@ -234,6 +240,16 @@ public class Player extends MovingGameObject {
             setX(maxX);
         else if (getX() < minX)
             setX(minX);
+    }
+
+    public Shape getShape() {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setWidth(hatVerticalWidth);
+        rectangle.setHeight(playerHeight);
+        rectangle.setX(getX() + (hatHorizontalWidth - hatVerticalWidth) / 2);
+        rectangle.setY(getY());
+                
+        return rectangle;
     }
 
 }

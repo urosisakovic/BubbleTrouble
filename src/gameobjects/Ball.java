@@ -5,6 +5,7 @@ import gameobjects.weapons.Weapon;
 import java.util.Random;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 public class Ball extends MovingGameObject {
 
@@ -19,7 +20,7 @@ public class Ball extends MovingGameObject {
     private float minY;
     
     private int size;
-    
+        
     public Ball(float x, float y, float speedX, float speedY, float radius, Color color, int size) {
         super(x, y, speedX, speedY);
         this.radius = radius;
@@ -95,11 +96,21 @@ public class Ball extends MovingGameObject {
         }
     }  
     
+    private boolean intersects(Shape shape) {
+        Circle circle = new Circle();
+        circle.setRadius(radius);
+        circle.setCenterX(getX());
+        circle.setCenterY(getY());
+        
+        Shape intersection = Shape.intersect(shape, circle);
+        return intersection.getBoundsInLocal().getWidth() > 0;
+    }
+    
     private void handlePlayerCollisions() {
         Player player = GameModel.getInstance().getPlayer();
         
         if (player != null)
-            if (this.getBoundsInParent().intersects(player.getBoundsInParent()))
+            if (this.intersects(player.getShape()))
                 GameModel.getInstance().gameLost();
     }
     

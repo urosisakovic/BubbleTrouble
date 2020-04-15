@@ -9,8 +9,6 @@ public abstract class Weapon extends MovingGameObject {
     
     public Weapon(float x, float y, float speedY) {
         super(x, y, 0, speedY);
-        
-        draw();
     }
         
     @Override

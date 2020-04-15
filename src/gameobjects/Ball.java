@@ -54,8 +54,8 @@ public class Ball extends MovingGameObject {
     
     @Override
     public void initializeInScene() {
-        sceneHeight = (float) this.getScene().getHeight();
-        sceneWidth = (float) this.getScene().getWidth();
+        sceneHeight = GameModel.getInstance().getSceneHeight();
+        sceneWidth = GameModel.getInstance().getSceneWidth();
         minX = radius;
         
         maxX = sceneWidth - radius;

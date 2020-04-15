@@ -6,6 +6,8 @@ public class Bullet extends Weapon {
     
     public Bullet(float x, float y, float speedY) {
         super(x, y, speedY);
+        
+        draw();
     }
 
     @Override

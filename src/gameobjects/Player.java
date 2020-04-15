@@ -222,8 +222,8 @@ public class Player extends MovingGameObject {
     
     @Override
     public void initializeInScene() {
-        sceneHeight = (float) this.getScene().getHeight();
-        sceneWidth = (float) this.getScene().getWidth();
+        sceneHeight = GameModel.getInstance().getSceneHeight();
+        sceneWidth = GameModel.getInstance().getSceneWidth();
         minX = 0;
         maxX = sceneWidth - playerWidth;
         this.setY(sceneHeight - playerHeight);

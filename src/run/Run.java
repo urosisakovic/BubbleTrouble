@@ -9,6 +9,12 @@ public class Run extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        Background wrapperBackground = new Background(
+            GameModel.getInstance().getSceneWidth(), 
+            GameModel.getInstance().getSceneHeight(),
+            GameModel.getInstance().getWrapperBackgroundColor()
+        );
+        
         Background background = new Background(
             GameModel.getInstance().getSceneWidth(), 
             GameModel.getInstance().getSceneHeight(),
@@ -25,7 +31,16 @@ public class Run extends Application {
             GameModel.getInstance().getScoreSemaphoreY()
         );
         
-        Ball ball = new Ball(
+        Ball ball1 = new Ball(
+            GameModel.getInstance().getStartBallX(),
+            GameModel.getInstance().getMaxBallHeight(GameModel.getInstance().getStartBallSize()),
+            -GameModel.getInstance().getStartBallSpeedX(),
+            GameModel.getInstance().getStartBallSpeedY(),
+            GameModel.getInstance().getStartBallRadius(),
+            GameModel.getInstance().getStartBallColor()
+        );
+        
+        Ball ball2 = new Ball(
             GameModel.getInstance().getStartBallX(),
             GameModel.getInstance().getMaxBallHeight(GameModel.getInstance().getStartBallSize()),
             GameModel.getInstance().getStartBallSpeedX(),
@@ -34,11 +49,12 @@ public class Run extends Application {
             GameModel.getInstance().getStartBallColor()
         );
         
+        GameModel.getInstance().setWrapperBackground(wrapperBackground);
         GameModel.getInstance().setBackground(background);
         GameModel.getInstance().setPlayer(player);
         GameModel.getInstance().setScoreSemaphore(scoreSemaphore);
-        GameModel.getInstance().addBall(ball);
-        
+        GameModel.getInstance().addBall(ball1);
+        GameModel.getInstance().addBall(ball2);
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());

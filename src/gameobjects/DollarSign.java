@@ -28,7 +28,7 @@ public class DollarSign extends MovingGameObject {
 
     @Override
     public void initializeInScene() {
-        maxY = (float) (this.getScene().getHeight()) - height;
+        maxY = GameModel.getInstance().getSceneHeight() - height;
     }
 
     @Override

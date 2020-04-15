@@ -29,8 +29,12 @@ public class GameModel {
         balls = new CopyOnWriteArrayList<>();
         dollarSigns = new CopyOnWriteArrayList<>();
         
+        wrapper = new Group();
         root = new Group();
-        scene = new Scene(root, sceneWidth, sceneHeight);
+        root.setScaleX(0.8);
+        root.setScaleY(0.8);
+        wrapper.getChildren().add(root);
+        scene = new Scene(wrapper, sceneWidth, sceneHeight);
         
         timer = new AnimationTimer() {
             @Override
@@ -83,6 +87,7 @@ public class GameModel {
     private final float ballAcceleration = sceneHeight / 100;
     private final float bulletSpeed = -5;
     private final LinearGradient backgroundColor;
+    private final LinearGradient wrapperBackgroundColor;
     private final float gravity = 0.2f;
 
     public float getMaxBallHeight(int size) {
@@ -105,6 +110,19 @@ public class GameModel {
         backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
     }
     
+    {
+        Stop[] stops = new Stop[] {
+            new Stop(0, Color.BLACK),
+            new Stop(0.2, Color.GRAY),
+            new Stop(0.4, Color.BLACK),
+            new Stop(0.6, Color.GRAY),
+            new Stop(0.8, Color.BLACK),
+            new Stop(1, Color.GRAY)
+        };
+        
+        wrapperBackgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REPEAT, stops);
+    }
+    
     // Dollar signs settings
     private final float dollarSignProb = 0.16f;
     private final float dollarSignWidth = 40;
@@ -120,8 +138,10 @@ public class GameModel {
     private boolean running;
     private final AnimationTimer timer;
     private final Group root;
+    private final Group wrapper;
     private final Scene scene;
     private Background background;
+    private Background wrapperBackground;
     private Player player = null;
     private Weapon weapon = null;
     private CopyOnWriteArrayList<Ball> balls;
@@ -153,6 +173,11 @@ public class GameModel {
     public void setBackground(Background background) {
         this.background = background;
         root.getChildren().add(this.background);
+    }
+    
+    public void setWrapperBackground(Background wrapperBackground) {
+        this.wrapperBackground = wrapperBackground;
+        wrapper.getChildren().add(0, wrapperBackground);
     }
     
     public void setPlayer(Player player) {
@@ -298,6 +323,10 @@ public class GameModel {
     
     public LinearGradient getBackgroundColor() {
         return backgroundColor;
+    }
+    
+    public LinearGradient getWrapperBackgroundColor() {
+        return wrapperBackgroundColor;
     }
    
     public int getStartBallSize() {

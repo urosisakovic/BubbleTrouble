@@ -72,17 +72,30 @@ public class GameModel {
     private final String gameName = "Bubble Trouble";
     
     // Ball settings
+    private final float fixBallOffset = sceneHeight / 3;
+    private final float ballSizeOffset = sceneHeight / 15;
+    private final int startBallSize = 4;
     private final float startBallX = 100;
-    private final float startBallY = 100;
-    private final float startBallSpeedX = sceneWidth / 400;
-    private final float startBallSpeedY = sceneHeight / 250;
+    private final float startBallSpeedX = sceneWidth / 300;
+    private final float startBallSpeedY = 0;
     private final float startBallRadius = 80;
     private final Color startBallColor = Color.GREEN;
-    private final int startBallSize = 4;
     private final float ballAcceleration = sceneHeight / 100;
     private final float bulletSpeed = -5;
-    
     private final LinearGradient backgroundColor;
+    private final float gravity = 0.2f;
+
+    public float getMaxBallHeight(int size) {
+        return fixBallOffset + size * ballSizeOffset;
+    }
+    
+    public float getBallSizeOffset() {
+        return ballSizeOffset;
+    }
+
+    public float getGravity() {
+        return gravity;
+    }
     {
         Stop[] stops = new Stop[] {
             new Stop(0, Color.YELLOW),
@@ -258,11 +271,7 @@ public class GameModel {
     public float getStartBallX() {
         return startBallX;
     }
-
-    public float getStartBallY() {
-        return startBallY;
-    }
-
+    
     public float getStartBallSpeedX() {
         return startBallSpeedX;
     }

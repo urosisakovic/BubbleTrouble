@@ -65,11 +65,7 @@ public class Ball extends MovingGameObject {
     @Override
     public void update() {
         super.update();
-        
-        if (speedY < 0)
-            speedY += 0.005 * size;
-        else
-            speedY = GameModel.getInstance().getStartBallSpeedY() * (1f + (0.2f / (float)Math.sqrt(size)));
+        speedY += GameModel.getInstance().getGravity();
     }
     
     @Override
@@ -147,15 +143,12 @@ public class Ball extends MovingGameObject {
     }
     
     private float calculateNewSpeedY() {
-        float newSpeedY = 0;
+        float H = getY() - GameModel.getInstance().getMaxBallHeight(size - 1);
+        float g = GameModel.getInstance().getGravity();
         
-        if (speedY > 0)
-            newSpeedY = -1f;
-        else
-            newSpeedY = speedY * 1.1f;
+        float v0 = (float) -Math.sqrt(2 * g * H);
         
-        
-        return newSpeedY;
+        return v0;
     }
     
     private void handleWeaponCollisions() {

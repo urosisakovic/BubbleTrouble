@@ -20,24 +20,25 @@ public class Run extends Application {
             GameModel.getInstance().getPlayerSpeed()
         );
         
+        ScoreSemaphore scoreSemaphore = new ScoreSemaphore(
+            GameModel.getInstance().getScoreSemaphoreX(),
+            GameModel.getInstance().getScoreSemaphoreY()
+        );
+        
         Ball ball = new Ball(
             GameModel.getInstance().getStartBallX(),
-            GameModel.getInstance().getStartBallY(),
+            GameModel.getInstance().getMaxBallHeight(GameModel.getInstance().getStartBallSize()),
             GameModel.getInstance().getStartBallSpeedX(),
             GameModel.getInstance().getStartBallSpeedY(),
             GameModel.getInstance().getStartBallRadius(),
             GameModel.getInstance().getStartBallColor()
         );
         
-        ScoreSemaphore scoreSemaphore = new ScoreSemaphore(
-            GameModel.getInstance().getScoreSemaphoreX(),
-            GameModel.getInstance().getScoreSemaphoreY()
-        );
-        
         GameModel.getInstance().setBackground(background);
         GameModel.getInstance().setPlayer(player);
-        GameModel.getInstance().addBall(ball);
         GameModel.getInstance().setScoreSemaphore(scoreSemaphore);
+        GameModel.getInstance().addBall(ball);
+        
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());

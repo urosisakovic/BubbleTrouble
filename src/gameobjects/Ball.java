@@ -10,10 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
-public final class Ball extends MovingGameObject {
+public class Ball extends MovingGameObject {
 
-    private float radius;
-    private Color color;
+    protected float radius;
+    protected Color color;
     
     private float sceneHeight;
     private float sceneWidth;
@@ -24,7 +24,7 @@ public final class Ball extends MovingGameObject {
     
     private int size;
     
-    private boolean canKill = false;
+    protected boolean canKill = false;
         
 // CONSTRUCTORS-----------------------------------------------------------------
     public Ball(float x, float y, float speedX, float speedY, float radius, Color color, int size) {
@@ -52,7 +52,7 @@ public final class Ball extends MovingGameObject {
     
 // INIT, DRAW, UPDATE-----------------------------------------------------------
     @Override
-    protected final void draw() {
+    protected void draw() {
         Circle circle = new Circle();
         circle.setRadius(radius);
         circle.setFill(color);
@@ -88,7 +88,7 @@ public final class Ball extends MovingGameObject {
 //------------------------------------------------------------------------------
     
 // PRIVATE COLLISION HANDLING HELPER METHODS------------------------------------
-    private boolean intersects(Shape shape) {
+    protected boolean intersects(Shape shape) {
         Circle circle = new Circle();
         circle.setRadius(radius);
         circle.setCenterX(getX());
@@ -120,7 +120,7 @@ public final class Ball extends MovingGameObject {
         }
     }
     
-    private void divide(boolean countPoints) {
+    protected void divide(boolean countPoints) {
         GameModel.getInstance().removeBall(this);
         
         if (size == 1) {
@@ -136,23 +136,51 @@ public final class Ball extends MovingGameObject {
 
             float newSpeedY = calculateNewSpeedY();
 
-            GameModel.getInstance().addBall(
-                new Ball(
-                    getX(), getY(),
-                    getSpeedX(), newSpeedY,
-                    this.radius / 2, newColor,
-                    size - 1
-                )
-            );
+           
+            double creationProbability = Math.random();
+            if (creationProbability > 0.05) {
+                GameModel.getInstance().addBall(
+                    new Ball(
+                        getX(), getY(),
+                        getSpeedX(), newSpeedY,
+                        this.radius / 2, newColor,
+                        size - 1
+                    )
+                );
+            }
+            else {
+                GameModel.getInstance().addBall(
+                    new FakeBall(
+                        getX(), getY(),
+                        getSpeedX(), newSpeedY,
+                        this.radius / 2, newColor,
+                        size - 1
+                    )
+                );
+            }
+            
 
-            GameModel.getInstance().addBall(
-                new Ball(
-                    getX(), getY(),
-                    -getSpeedX(), newSpeedY,
-                    this.radius / 2, newColor,
-                    size - 1
-                )
-            );
+            creationProbability = Math.random();
+            if (creationProbability > 0.05) {
+                GameModel.getInstance().addBall(
+                    new Ball(
+                        getX(), getY(),
+                        -getSpeedX(), newSpeedY,
+                        this.radius / 2, newColor,
+                        size - 1
+                    )
+                );
+            }
+            else {
+                GameModel.getInstance().addBall(
+                    new FakeBall(
+                        getX(), getY(),
+                        -getSpeedX(), newSpeedY,
+                        this.radius / 2, newColor,
+                        size - 1
+                    )
+                );
+            }
         }
     }
     
@@ -234,7 +262,7 @@ public final class Ball extends MovingGameObject {
         }
     }
     
-    private void handlePlayerCollisions() {
+    protected void handlePlayerCollisions() {
         if (!canKill) {
             return;
         }
@@ -255,7 +283,7 @@ public final class Ball extends MovingGameObject {
             }
     }
     
-    private void handleWeaponCollisions() {
+    protected void handleWeaponCollisions() {
         Weapon weapon = GameModel.getInstance().getWeapon();
         
         if (weapon != null) {

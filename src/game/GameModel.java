@@ -22,23 +22,95 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class GameModel {
-
-    // Singleton fields and methods
+// GAME OBJECTS-----------------------------------------------------------------
+    private final Group root = new Group();
+    private Player player = null;
+    private Weapon weapon = null;
+    private Background background;
+    private Timer gameTimer = null;
+    
+    private final CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<FallingBonus> fallingBonuses = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<LifeIcon> lifeIcons = new CopyOnWriteArrayList<>();
+//------------------------------------------------------------------------------
+    
+// GAME WRAPPER-----------------------------------------------------------------
+    private final Scene scene;
+    private final Group wrapper = new Group();
+    private Background wrapperBackground;
+    private ScoreSemaphore scoreSemaphore = null;
+//------------------------------------------------------------------------------
+    
+// GAME LOGIC-------------------------------------------------------------------
+    private boolean running = true;
+    private AnimationTimer timer;
+    private int lifeCount;
+//------------------------------------------------------------------------------
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private int points = 0;
+    
+// GRADIENTS - move to Config---------------------------------------------------
+    private final LinearGradient backgroundColor;
+    private final LinearGradient wrapperBackgroundColor;
+    
+    {
+        Stop[] stops = new Stop[] {
+            new Stop(0, Color.YELLOW),
+            new Stop(1, Color.BLACK)
+        };
+        
+        backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+    }
+    
+    {
+        Stop[] stops = new Stop[] {
+            new Stop(0, Color.GRAY),
+            new Stop(0.2, Color.BLACK),
+            new Stop(0.4, Color.GRAY),
+            new Stop(0.6, Color.BLACK),
+            new Stop(0.8, Color.GRAY),
+            new Stop(1, Color.BLACK)
+        };
+        
+        wrapperBackgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REPEAT, stops);
+    }
+//------------------------------------------------------------------------------
+    
+// SINGLETON--------------------------------------------------------------------
     private static GameModel instance = null; 
     
     private GameModel() {
-        running = true;
-        balls = new CopyOnWriteArrayList<>();
-        fallingBonuses = new CopyOnWriteArrayList<>();
-        lifeIcons = new CopyOnWriteArrayList<>();
-        
-        wrapper = new Group();
-        root = new Group();
         root.setScaleX(0.8);
         root.setScaleY(0.8);
         wrapper.getChildren().add(root);
-        scene = new Scene(wrapper, sceneWidth, sceneHeight);
+        scene = new Scene(wrapper, Config.sceneWidth, Config.sceneHeight);
         
+        createAnimaTimer();
+    }
+    
+    public static GameModel getInstance() {
+        if (instance == null)
+            instance = new GameModel();
+        
+        return instance;
+    }
+//------------------------------------------------------------------------------
+  
+// TIMER------------------------------------------------------------------------
+    private void createAnimaTimer() {
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -64,105 +136,17 @@ public class GameModel {
         };
     }
     
-    public static GameModel getInstance() {
-        if (instance == null)
-            instance = new GameModel();
-        
-        return instance;
+    public void start() {
+        timer.start();
     }
-    
-    // Game settings
-    private final float sceneHeight = 700;
-    private final float sceneWidth = 1500;
-    
-    private final float playerHeight = sceneHeight / 7;
-    private final float playerStartX = 100;
-    private final float playerSpeed = sceneWidth / 200;
-    
-    private final String gameName = "Bubble Trouble";
-    
-    // Ball settings
-    private final float fixBallOffset = sceneHeight / 3;
-    private final float ballSizeOffset = sceneHeight / 15;
-    private final int startBallSize = 4;
-    private final float startBallX = sceneWidth / 2;
-    private final float startBallSpeedX = sceneWidth / 300;
-    private final float startBallSpeedY = 0;
-    private final float startBallRadius = 80;
-    private final Color startBallColor = Color.GREEN;
-    private final float ballAcceleration = sceneHeight / 100;
-    private final float bulletSpeed = -5;
-    private final LinearGradient backgroundColor;
-    private final LinearGradient wrapperBackgroundColor;
-    private final float gravity = 0.2f;
-
-    public float getMaxBallHeight(int size) {
-        return fixBallOffset + size * ballSizeOffset;
-    }
-    
-    public float getBallSizeOffset() {
-        return ballSizeOffset;
+//------------------------------------------------------------------------------   
+    public void addMoreTime(int sec) {
+        gameTimer.addMoreTime(sec);
     }
 
-    public float getGravity() {
-        return gravity;
-    }
-    {
-        Stop[] stops = new Stop[] {
-            new Stop(0, Color.YELLOW),
-            new Stop(1, Color.BLACK)
-        };
-        
-        backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
-    }
-    
-    {
-        Stop[] stops = new Stop[] {
-            new Stop(0, Color.GRAY),
-            new Stop(0.2, Color.BLACK),
-            new Stop(0.4, Color.GRAY),
-            new Stop(0.6, Color.BLACK),
-            new Stop(0.8, Color.GRAY),
-            new Stop(1, Color.BLACK)
-        };
-        
-        wrapperBackgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REPEAT, stops);
-    }
-    
-    // Dollar signs settings
-    private final float singleFallingBonusProb = 0.16f;
-    private final float fallingBonusProb = (float) (1 - Math.pow(1 - singleFallingBonusProb, 3));
-    private final float dollarSignWidth = 40;
-    private final float dollarSignHeight = 60;
-    private final float dollarSignSpeed = 0.5f;
-    private final Color dollarSignColor = Color.GREEN;
-    
-    // Score semaphore settings
-    private final float scoreSemaphoreX = (float) (0.83 * sceneWidth);
-    private final float scoreSemaphoreY = (float) (0.06 * sceneHeight);
-    
-    // Game model logic
-    private boolean running;
-    private final AnimationTimer timer;
-    private Timer gameTimer = null;
-    private final Group root;
-    private final Group wrapper;
-    private final Scene scene;
-    private Background background;
-    private Background wrapperBackground;
-    private Player player = null;
-    private Weapon weapon = null;
-    private CopyOnWriteArrayList<Ball> balls;
-    private CopyOnWriteArrayList<FallingBonus> fallingBonuses;
-    private ScoreSemaphore scoreSemaphore = null;
-    private int lifeCount;
-    private CopyOnWriteArrayList<LifeIcon> lifeIcons;
-    private final float lifeIconWidth = 50;
-    private final float lifeIconY = 20;
-    
-    private int points = 0;
-    public int getPoints() {
-        return points;
+    public void shieldPlayer() {
+        if (player != null)
+            player.shieldPlayer();
     }
     
     public void setGameTimer(Timer gameTimer) {
@@ -200,7 +184,7 @@ public class GameModel {
     public void setPlayer(Player player) {
         this.player = player;
         root.getChildren().add(this.player);
-        player.initializeInScene(playerStartX);
+        player.initializeInScene(Config.playerStartX);
     }
     
     public void setWeapon(Weapon weapon) {
@@ -242,10 +226,8 @@ public class GameModel {
         fallingBonuses.remove(fallingBonus);
     }
     
-    public boolean noMoreBalls() {
-        return (balls.isEmpty());
-    }
     
+// GAME CONTROLS----------------------------------------------------------------
     public void gameWon() {
         Text text = new Text();
         text.setText("You won!");
@@ -253,8 +235,8 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.GREENYELLOW);
         
-        text.setX(0.35 * sceneWidth); 
-        text.setY(0.6 * sceneHeight); 
+        text.setX(0.35 * Config.sceneWidth); 
+        text.setY(0.6 * Config.sceneHeight); 
         root.getChildren().add(text);
                 
         running = false;
@@ -267,67 +249,109 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.RED);
         
-        text.setX(0.35 * sceneWidth); 
-        text.setY(0.6 * sceneHeight); 
+        text.setX(0.35 * Config.sceneWidth); 
+        text.setY(0.6 * Config.sceneHeight); 
         root.getChildren().add(text);
                 
         running = false;
     }
     
+    public boolean noMoreBalls() {
+        return (balls.isEmpty());
+    }
+    
+    public void setLifeCount(int lifeCount) {
+        this.lifeCount = lifeCount;
+        
+        float offset = 0;
+        for (int i = 0; i < this.lifeCount; i++) {
+            LifeIcon newLifeIcon = new LifeIcon(offset, Config.lifeIconY, Config.lifeIconWidth);
+            offset += Config.lifeIconWidth * 1.4;
+            
+            lifeIcons.add(newLifeIcon);
+            wrapper.getChildren().add(newLifeIcon);
+        }
+    }
+    
+    public void loseLife() {
+        this.lifeCount--;
+        if (this.lifeCount == 0)
+            this.gameLost();
+        
+        LifeIcon toRemove = lifeIcons.get(this.lifeCount);
+        lifeIcons.remove(toRemove);
+        wrapper.getChildren().remove(toRemove);
+    }
+//------------------------------------------------------------------------------
+    
+    
+// GETTERS----------------------------------------------------------------------
+    public float getMaxBallHeight(int size) {
+        return Config.fixBallOffset + size * Config.ballSizeOffset;
+    }
+    
+    public float getBallSizeOffset() {
+        return Config.ballSizeOffset;
+    }
+
+    public float getGravity() {
+        return Config.gravity;
+    }
+    
+    public int getPoints() {
+        return points;
+    }
+    
     public String getGameName() {
-        return gameName;
+        return Config.gameName;
     }
     
     public Scene getScene() {
         return scene;
     }
     
-    public void start() {
-        timer.start();
-    }
-    
     public float getSceneHeight() {
-        return sceneHeight;
+        return Config.sceneHeight;
     }
 
     public float getSceneWidth() {
-        return sceneWidth;
+        return Config.sceneWidth;
     }
 
     public float getPlayerHeight() {
-        return playerHeight;
+        return Config.playerHeight;
     }
 
     public float getPlayerStartX() {
-        return playerStartX;
+        return Config.playerStartX;
     }
 
     public float getPlayerSpeed() {
-        return playerSpeed;
+        return Config.playerSpeed;
     }
     
     public Color getStartBallColor() {
-        return startBallColor;
+        return Config.startBallColor;
     }
     
     public float getStartBallX() {
-        return startBallX;
+        return Config.startBallX;
     }
     
     public float getStartBallSpeedX() {
-        return startBallSpeedX;
+        return Config.startBallSpeedX;
     }
 
     public float getStartBallSpeedY() {
-        return startBallSpeedY;
+        return Config.startBallSpeedY;
     }
 
     public float getStartBallRadius() {
-        return startBallRadius;
+        return Config.startBallRadius;
     }   
     
     public float getBulletSpeed() {
-        return bulletSpeed;
+        return Config.bulletSpeed;
     }
 
     public Player getPlayer() {
@@ -347,71 +371,40 @@ public class GameModel {
     }
    
     public int getStartBallSize() {
-        return startBallSize;
+        return Config.startBallSize;
     }
     
     public float getFallingBonusProb() {
-        return fallingBonusProb;
+        return Config.fallingBonusProb;
     }
 
     public float getDollarSignWidth() {
-        return dollarSignWidth;
+        return Config.dollarSignWidth;
     }
 
     public float getDollarSignHeight() {
-        return dollarSignHeight;
+        return Config.dollarSignHeight;
     }
 
     public float getDollarSignSpeed() {
-        return dollarSignSpeed;
+        return Config.dollarSignSpeed;
     }
     
     public Color getDollarSignColor() {
-        return dollarSignColor;
+        return Config.dollarSignColor;
     }
  
     public float getScoreSemaphoreX() {
-        return scoreSemaphoreX;
+        return Config.scoreSemaphoreX;
     }
 
     public float getScoreSemaphoreY() {
-        return scoreSemaphoreY;
+        return Config.scoreSemaphoreY;
     }
     
     public float getBallAcceleration() {
-        return ballAcceleration;
+        return Config.ballAcceleration;
     }
+//------------------------------------------------------------------------------
     
-    public void setLifeCount(int lifeCount) {
-        this.lifeCount = lifeCount;
-        
-        float offset = 0;
-        for (int i = 0; i < this.lifeCount; i++) {
-            LifeIcon newLifeIcon = new LifeIcon(offset, lifeIconY, lifeIconWidth);
-            offset += lifeIconWidth * 1.4;
-            
-            lifeIcons.add(newLifeIcon);
-            wrapper.getChildren().add(newLifeIcon);
-        }
-    }
-    
-    public void loseLife() {
-        this.lifeCount--;
-        if (this.lifeCount == 0)
-            this.gameLost();
-        
-        LifeIcon toRemove = lifeIcons.get(this.lifeCount);
-        lifeIcons.remove(toRemove);
-        wrapper.getChildren().remove(toRemove);
-    }
-
-    public void addMoreTime(int sec) {
-        gameTimer.addMoreTime(sec);
-    }
-
-    public void shieldPlayer() {
-        if (player != null)
-            player.shieldPlayer();
-    }
-  
 }

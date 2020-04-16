@@ -286,9 +286,7 @@ public final class Player extends MovingGameObject {
         }
     }
     
-    public void shieldPlayer() {
-        System.out.println("Player SHIELDED");
-        
+    public void shieldPlayer() {        
         shielded = true;
         shieldedTime = System.nanoTime();
         
@@ -306,9 +304,7 @@ public final class Player extends MovingGameObject {
         return shielded;
     }
     
-    public void unshieldPlayer() {
-        System.out.println("Player UNSHIELDED");
-        
+    public void unshieldPlayer() {        
         shielded = false;
         
         face.setFill(faceColor);

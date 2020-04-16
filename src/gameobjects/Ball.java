@@ -20,6 +20,8 @@ public class Ball extends MovingGameObject {
     private float minY;
     
     private int size;
+    
+    private boolean canKill = false;
         
     public Ball(float x, float y, float speedX, float speedY, float radius, Color color, int size) {
         super(x, y, speedX, speedY);
@@ -65,8 +67,18 @@ public class Ball extends MovingGameObject {
     
     @Override
     public void update() {
-        super.update();
-        speedY += GameModel.getInstance().getGravity();
+        if (canKill) {
+            super.update();
+            speedY += GameModel.getInstance().getGravity();
+        }
+        else {
+            super.update();
+            speedY += GameModel.getInstance().getGravity();
+            if (speedY >= 0) {
+                System.out.println("canKill = true;");
+                canKill = true;
+            }
+        }
     }
     
     @Override
@@ -106,12 +118,55 @@ public class Ball extends MovingGameObject {
         return intersection.getBoundsInLocal().getWidth() > 0;
     }
     
+    private void divide(boolean countPoints) {
+        GameModel.getInstance().removeBall(this);
+        
+        if (size == 1) {
+            if (countPoints)
+                GameModel.getInstance().incrementPoints(10);
+            if (GameModel.getInstance().noMoreBalls())
+                GameModel.getInstance().gameWon();
+        }
+        else {
+            if (countPoints)
+                GameModel.getInstance().incrementPoints(5);
+            Color newColor = differentColor(this.color);
+
+            float newSpeedY = calculateNewSpeedY();
+
+            GameModel.getInstance().addBall(
+                new Ball(
+                    getX(), getY(),
+                    getSpeedX(), newSpeedY,
+                    this.radius / 2, newColor,
+                    size - 1
+                )
+            );
+
+            GameModel.getInstance().addBall(
+                new Ball(
+                    getX(), getY(),
+                    -getSpeedX(), newSpeedY,
+                    this.radius / 2, newColor,
+                    size - 1
+                )
+            );
+        }
+    }
+    
     private void handlePlayerCollisions() {
+        if (!canKill) {
+            return;
+        }
+        
         Player player = GameModel.getInstance().getPlayer();
         
         if (player != null)
-            if (this.intersects(player.getShape()))
-                GameModel.getInstance().gameLost();
+            if (this.intersects(player.getShape())) {
+                GameModel.getInstance().loseLife();
+                canKill = false;
+                divide(false);
+            }
     }
     
     private Color differentColor(Color color) {
@@ -167,37 +222,7 @@ public class Ball extends MovingGameObject {
         
         if (weapon != null) {
             if (this.getBoundsInParent().intersects(weapon.getBoundsInParent())) {
-                GameModel.getInstance().removeBall(this);
-                
-                if (size == 1) {
-                    GameModel.getInstance().incrementPoints(10);
-                    if (GameModel.getInstance().noMoreBalls())
-                        GameModel.getInstance().gameWon();
-                }
-                else {
-                    GameModel.getInstance().incrementPoints(5);
-                    Color newColor = differentColor(this.color);
-                    
-                    float newSpeedY = calculateNewSpeedY();
-                    
-                    GameModel.getInstance().addBall(
-                        new Ball(
-                            getX(), getY(),
-                            getSpeedX(), newSpeedY,
-                            this.radius / 2, newColor,
-                            size - 1
-                        )
-                    );
-                    
-                    GameModel.getInstance().addBall(
-                        new Ball(
-                            getX(), getY(),
-                            -getSpeedX(), newSpeedY,
-                            this.radius / 2, newColor,
-                            size - 1
-                        )
-                    );
-                }
+                divide(true);
                 
                 createDollarSign();
                 

@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 
-public class StraightHarpoon extends Weapon {
+public final class StraightHarpoon extends Weapon {
 
     public StraightHarpoon(float x, float y, float speedY) {
         super(x, y, speedY);

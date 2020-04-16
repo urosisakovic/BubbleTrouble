@@ -1,7 +1,6 @@
 package gameobjects;
 
 import game.GameModel;
-import gameobjects.weapons.StraightHarpoon;
 import gameobjects.weapons.CurvyHarpoon;
 import gameobjects.weapons.Weapon;
 import javafx.geometry.Point2D;
@@ -20,7 +19,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class Player extends MovingGameObject {
+public final class Player extends MovingGameObject {
      
     private final float playerHeight;
     private final float playerWidth;

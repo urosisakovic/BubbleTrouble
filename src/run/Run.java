@@ -61,6 +61,7 @@ public class Run extends Application {
         GameModel.getInstance().addBall(ball1);
         GameModel.getInstance().addBall(ball2);
         GameModel.getInstance().setGameTimer(gameTimer);
+        GameModel.getInstance().setLifeCount(5);
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());

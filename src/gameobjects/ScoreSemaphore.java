@@ -6,7 +6,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class ScoreSemaphore extends GameObject {
+public final class ScoreSemaphore extends GameObject {
 
     private Text score;
     private int points = 0;

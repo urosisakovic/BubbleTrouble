@@ -2,7 +2,7 @@ package gameobjects.weapons;
 
 import javafx.scene.shape.Rectangle;
 
-public class Bullet extends Weapon {
+public final class Bullet extends Weapon {
     
     public Bullet(float x, float y, float speedY) {
         super(x, y, speedY);

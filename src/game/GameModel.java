@@ -3,6 +3,7 @@ package game;
 import gameobjects.Background;
 import gameobjects.Ball;
 import gameobjects.DollarSign;
+import gameobjects.LifeIcon;
 import gameobjects.Player;
 import gameobjects.ScoreSemaphore;
 import gameobjects.Timer;
@@ -29,6 +30,7 @@ public class GameModel {
         running = true;
         balls = new CopyOnWriteArrayList<>();
         dollarSigns = new CopyOnWriteArrayList<>();
+        lifeIcons = new CopyOnWriteArrayList<>();
         
         wrapper = new Group();
         root = new Group();
@@ -116,12 +118,12 @@ public class GameModel {
     
     {
         Stop[] stops = new Stop[] {
-            new Stop(0, Color.BLACK),
-            new Stop(0.2, Color.GRAY),
-            new Stop(0.4, Color.BLACK),
-            new Stop(0.6, Color.GRAY),
-            new Stop(0.8, Color.BLACK),
-            new Stop(1, Color.GRAY)
+            new Stop(0, Color.GRAY),
+            new Stop(0.2, Color.BLACK),
+            new Stop(0.4, Color.GRAY),
+            new Stop(0.6, Color.BLACK),
+            new Stop(0.8, Color.GRAY),
+            new Stop(1, Color.BLACK)
         };
         
         wrapperBackgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REPEAT, stops);
@@ -135,8 +137,8 @@ public class GameModel {
     private final Color dollarSignColor = Color.GREEN;
     
     // Score semaphore settings
-    private final float scoreSemaphoreX = (float) (0.85 * sceneWidth);
-    private final float scoreSemaphoreY = (float) (0.08 * sceneHeight);
+    private final float scoreSemaphoreX = (float) (0.83 * sceneWidth);
+    private final float scoreSemaphoreY = (float) (0.06 * sceneHeight);
     
     // Game model logic
     private boolean running;
@@ -152,6 +154,10 @@ public class GameModel {
     private CopyOnWriteArrayList<Ball> balls;
     private CopyOnWriteArrayList<DollarSign> dollarSigns;
     private ScoreSemaphore scoreSemaphore = null;
+    private int lifeCount;
+    private CopyOnWriteArrayList<LifeIcon> lifeIcons;
+    private final float lifeIconWidth = 50;
+    private final float lifeIconY = 20;
     
     private int points = 0;
     public int getPoints() {
@@ -373,6 +379,29 @@ public class GameModel {
     
     public float getBallAcceleration() {
         return ballAcceleration;
+    }
+    
+    public void setLifeCount(int lifeCount) {
+        this.lifeCount = lifeCount;
+        
+        float offset = 0;
+        for (int i = 0; i < this.lifeCount; i++) {
+            LifeIcon newLifeIcon = new LifeIcon(offset, lifeIconY, lifeIconWidth);
+            offset += lifeIconWidth * 1.4;
+            
+            lifeIcons.add(newLifeIcon);
+            wrapper.getChildren().add(newLifeIcon);
+        }
+    }
+    
+    public void loseLife() {
+        this.lifeCount--;
+        if (this.lifeCount == 0)
+            this.gameLost();
+        
+        LifeIcon toRemove = lifeIcons.get(this.lifeCount);
+        lifeIcons.remove(toRemove);
+        wrapper.getChildren().remove(toRemove);
     }
     
 }

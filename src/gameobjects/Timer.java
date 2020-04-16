@@ -8,7 +8,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class Timer extends GameObject {
+public final class Timer extends GameObject {
     private final float width, height;
     private final long startTime;
     private Rectangle bar;

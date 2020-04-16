@@ -8,7 +8,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-public class DollarSign extends MovingGameObject {
+public final class DollarSign extends MovingGameObject {
     
     private final float width;
     private final float height;

@@ -6,7 +6,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 
-public class CurvyHarpoon extends Weapon {
+public final class CurvyHarpoon extends Weapon {
     
     private Arc[] left = new Arc[50];
     private Arc[] right = new Arc[50];

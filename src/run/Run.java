@@ -49,12 +49,18 @@ public class Run extends Application {
             GameModel.getInstance().getStartBallColor()
         );
         
+        Timer gameTimer = new Timer(
+            0, GameModel.getInstance().getSceneHeight() - 50,
+            50, GameModel.getInstance().getSceneWidth()
+        );
+        
         GameModel.getInstance().setWrapperBackground(wrapperBackground);
         GameModel.getInstance().setBackground(background);
         GameModel.getInstance().setPlayer(player);
         GameModel.getInstance().setScoreSemaphore(scoreSemaphore);
         GameModel.getInstance().addBall(ball1);
         GameModel.getInstance().addBall(ball2);
+        GameModel.getInstance().setGameTimer(gameTimer);
         
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());

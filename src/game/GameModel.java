@@ -5,6 +5,7 @@ import gameobjects.Ball;
 import gameobjects.DollarSign;
 import gameobjects.Player;
 import gameobjects.ScoreSemaphore;
+import gameobjects.Timer;
 import gameobjects.weapons.Weapon;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.animation.AnimationTimer;
@@ -46,6 +47,9 @@ public class GameModel {
                     if (weapon != null)
                         weapon.update();
 
+                    if (gameTimer != null)
+                        gameTimer.update();
+                    
                     balls.forEach((ball) -> {
                         ball.update();
                     });
@@ -131,12 +135,13 @@ public class GameModel {
     private final Color dollarSignColor = Color.GREEN;
     
     // Score semaphore settings
-    private final float scoreSemaphoreX = (float) (0.78 * sceneWidth);
+    private final float scoreSemaphoreX = (float) (0.85 * sceneWidth);
     private final float scoreSemaphoreY = (float) (0.08 * sceneHeight);
     
     // Game model logic
     private boolean running;
     private final AnimationTimer timer;
+    private Timer gameTimer = null;
     private final Group root;
     private final Group wrapper;
     private final Scene scene;
@@ -151,6 +156,11 @@ public class GameModel {
     private int points = 0;
     public int getPoints() {
         return points;
+    }
+    
+    public void setGameTimer(Timer gameTimer) {
+        this.gameTimer = gameTimer;
+        wrapper.getChildren().add(this.gameTimer);
     }
     
     public void incrementPoints(int inc) {
@@ -236,8 +246,8 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.GREENYELLOW);
         
-        text.setX(0.25 * sceneWidth); 
-        text.setY(0.5 * sceneHeight); 
+        text.setX(0.35 * sceneWidth); 
+        text.setY(0.6 * sceneHeight); 
         root.getChildren().add(text);
                 
         running = false;
@@ -250,8 +260,8 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.RED);
         
-        text.setX(0.25 * sceneWidth); 
-        text.setY(0.5 * sceneHeight); 
+        text.setX(0.35 * sceneWidth); 
+        text.setY(0.6 * sceneHeight); 
         root.getChildren().add(text);
                 
         running = false;

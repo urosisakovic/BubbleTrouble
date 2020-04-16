@@ -2,7 +2,7 @@ package game;
 
 import gameobjects.Background;
 import gameobjects.Ball;
-import gameobjects.DollarSign;
+import gameobjects.bonuses.FallingBonus;
 import gameobjects.LifeIcon;
 import gameobjects.Player;
 import gameobjects.ScoreSemaphore;
@@ -29,7 +29,7 @@ public class GameModel {
     private GameModel() {
         running = true;
         balls = new CopyOnWriteArrayList<>();
-        dollarSigns = new CopyOnWriteArrayList<>();
+        fallingBonuses = new CopyOnWriteArrayList<>();
         lifeIcons = new CopyOnWriteArrayList<>();
         
         wrapper = new Group();
@@ -56,8 +56,8 @@ public class GameModel {
                         ball.update();
                     });
                     
-                    dollarSigns.forEach((dollarSign) -> {
-                        dollarSign.update();
+                    fallingBonuses.forEach((fallingBonus) -> {
+                        fallingBonus.update();
                     });
                 }
             }
@@ -130,7 +130,8 @@ public class GameModel {
     }
     
     // Dollar signs settings
-    private final float dollarSignProb = 0.16f;
+    private final float singleFallingBonusProb = 0.16f;
+    private final float fallingBonusProb = (float) (1 - Math.pow(1 - singleFallingBonusProb, 3));
     private final float dollarSignWidth = 40;
     private final float dollarSignHeight = 60;
     private final float dollarSignSpeed = 0.5f;
@@ -152,7 +153,7 @@ public class GameModel {
     private Player player = null;
     private Weapon weapon = null;
     private CopyOnWriteArrayList<Ball> balls;
-    private CopyOnWriteArrayList<DollarSign> dollarSigns;
+    private CopyOnWriteArrayList<FallingBonus> fallingBonuses;
     private ScoreSemaphore scoreSemaphore = null;
     private int lifeCount;
     private CopyOnWriteArrayList<LifeIcon> lifeIcons;
@@ -183,7 +184,7 @@ public class GameModel {
     
     public void setScoreSemaphore(ScoreSemaphore scoreSemaphore) {
         this.scoreSemaphore = scoreSemaphore;
-        root.getChildren().add(this.scoreSemaphore);
+        wrapper.getChildren().add(this.scoreSemaphore);
     }
     
     public void setBackground(Background background) {
@@ -230,15 +231,15 @@ public class GameModel {
         balls.remove(ball);
     }
     
-    public void addDollarSign(DollarSign dollarSign) {
-        dollarSigns.add(dollarSign);
-        root.getChildren().add(dollarSign);
-        dollarSign.initializeInScene();
+    public void addFallingBonus(FallingBonus fallingBonus) {
+        fallingBonuses.add(fallingBonus);
+        root.getChildren().add(fallingBonus);
+        fallingBonus.initializeInScene();
     }
     
-    public void removeDollarSign(DollarSign dollarSign) {
-        root.getChildren().remove(dollarSign);
-        dollarSigns.remove(dollarSign);
+    public void removeFallingBonus(FallingBonus fallingBonus) {
+        root.getChildren().remove(fallingBonus);
+        fallingBonuses.remove(fallingBonus);
     }
     
     public boolean noMoreBalls() {
@@ -349,8 +350,8 @@ public class GameModel {
         return startBallSize;
     }
     
-    public float getDollarSignProb() {
-        return dollarSignProb;
+    public float getFallingBonusProb() {
+        return fallingBonusProb;
     }
 
     public float getDollarSignWidth() {
@@ -403,5 +404,14 @@ public class GameModel {
         lifeIcons.remove(toRemove);
         wrapper.getChildren().remove(toRemove);
     }
-    
+
+    public void addMoreTime(int sec) {
+        gameTimer.addMoreTime(sec);
+    }
+
+    public void shieldPlayer() {
+        if (player != null)
+            player.shieldPlayer();
+    }
+  
 }

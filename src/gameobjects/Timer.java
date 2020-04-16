@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
 
 public final class Timer extends GameObject {
     private final float width, height;
-    private final long startTime;
+    private long startTime;
     private Rectangle bar;
     private Text score;
     
@@ -41,11 +41,17 @@ public final class Timer extends GameObject {
         this.getChildren().addAll(bar, score);
     }
     
+    public void addMoreTime(int sec) {
+        startTime += (long)(sec) * 1000000000l;
+    }
+    
     public void update() {
         long timeElapsed = System.nanoTime() - startTime;
         
         if (timeElapsed > 60000000000l)
             GameModel.getInstance().gameLost();
+        else if (timeElapsed < 0)
+            timeElapsed = 0;
         
         float secondsElapsed = (float) (timeElapsed / 1000000000);
         

@@ -1,6 +1,9 @@
 package gameobjects;
 
+import gameobjects.bonuses.DollarSignBonus;
 import game.GameModel;
+import gameobjects.bonuses.ShieldBonus;
+import gameobjects.bonuses.TimerBonus;
 import gameobjects.weapons.Weapon;
 import java.util.Random;
 import javafx.scene.paint.Color;
@@ -75,7 +78,6 @@ public class Ball extends MovingGameObject {
             super.update();
             speedY += GameModel.getInstance().getGravity();
             if (speedY >= 0) {
-                System.out.println("canKill = true;");
                 canKill = true;
             }
         }
@@ -163,7 +165,13 @@ public class Ball extends MovingGameObject {
         
         if (player != null)
             if (this.intersects(player.getShape())) {
-                GameModel.getInstance().loseLife();
+                if (player.isShielded()) {
+                    player.unshieldPlayer();
+                }
+                else {
+                    GameModel.getInstance().loseLife();
+                }
+                
                 canKill = false;
                 divide(false);
             }
@@ -193,19 +201,43 @@ public class Ball extends MovingGameObject {
     
     private void createDollarSign() {
         double creationProbability = Math.random();
-        if (creationProbability > GameModel.getInstance().getDollarSignProb())
+        if (creationProbability > GameModel.getInstance().getFallingBonusProb())
             return;
         
-        GameModel.getInstance().addDollarSign(
-            new DollarSign(
-                getX(),
-                getY(),
-                GameModel.getInstance().getDollarSignSpeed(),
-                GameModel.getInstance().getDollarSignWidth(),
-                GameModel.getInstance().getDollarSignHeight(),
-                GameModel.getInstance().getDollarSignColor()
-            )
+        DollarSignBonus dsb = new DollarSignBonus(
+            getX(),
+            getY(),
+            GameModel.getInstance().getDollarSignSpeed(),
+            GameModel.getInstance().getDollarSignWidth(),
+            GameModel.getInstance().getDollarSignHeight(),
+            GameModel.getInstance().getDollarSignColor()
         );
+        
+        TimerBonus tb = new TimerBonus(
+            getX(),
+            getY(),
+            GameModel.getInstance().getDollarSignSpeed(),
+            GameModel.getInstance().getDollarSignWidth(),
+            GameModel.getInstance().getDollarSignHeight()
+        );
+        
+        ShieldBonus sb = new ShieldBonus(
+            getX(),
+            getY(),
+            GameModel.getInstance().getDollarSignSpeed(),
+            GameModel.getInstance().getDollarSignWidth(),
+            GameModel.getInstance().getDollarSignHeight()
+        );
+        
+        creationProbability = Math.random();
+        if (creationProbability <= 0.33) {
+            GameModel.getInstance().addFallingBonus(dsb);
+        }
+        else if (creationProbability <= 0.67) {
+            GameModel.getInstance().addFallingBonus(tb);
+        }
+        else
+            GameModel.getInstance().addFallingBonus(sb);
     }
     
     private float calculateNewSpeedY() {

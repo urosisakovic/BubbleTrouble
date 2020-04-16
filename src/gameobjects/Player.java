@@ -30,6 +30,9 @@ public final class Player extends MovingGameObject {
     private float maxX;
     private float minX;
     
+    private boolean shielded = false;
+    private long shieldedTime;
+    
     public Player(float playerHeight, float playerSpeed) {
         super();
         this.playerHeight = playerHeight;
@@ -68,24 +71,34 @@ public final class Player extends MovingGameObject {
         this.getChildren().addAll(head, cape, hat);
     }
     
+    private final Color faceColor = Color.rgb(255, 220, 177);
+    private final Color eyeColor = Color.rgb(0, 0, 0);
+    private final Color mouthStrokeColor = Color.rgb(0, 0, 0);
+    private final Color mouthFillColor = Color.rgb(148, 10, 0);
+    
+    private final Color faceColorShielded = Color.rgb(255, 220, 177, 0.5);
+    private final Color eyeColorShielded = Color.rgb(0, 0, 0, 0.5);
+    private final Color mouthStrokeColorShielded = Color.rgb(0, 0, 0, 0.5);
+    private final Color mouthFillColorShielded = Color.rgb(148, 10, 0, 0.5);
+    
+    private Circle face;
+    private Polygon leftEye, rightEye;
+    private Arc mouth;
+    
     private Group drawHead() {
         final float headRadius = playerWidth / 3;
-        final Color faceColor = Color.rgb(255, 220, 177);
         final double eyeWidth = headRadius;
-        final Color eyeColor = Color.BLACK;
         final double mouthWidth = headRadius / 4;
-        final Color mouthStrokeColor = Color.BLACK;
-        final Color mouthFillColor = Color.rgb(148, 10, 0);
         
         Group head = new Group();
         
         // Face
-        Circle face = new Circle();
+        face = new Circle();
         face.setRadius(headRadius);
         face.setFill(faceColor);
         
         // Eyes
-        Polygon leftEye = new Polygon();
+        leftEye = new Polygon();
         leftEye.getPoints().addAll(
             new Double[] {
                 0.0,            0.0,
@@ -97,7 +110,7 @@ public final class Player extends MovingGameObject {
         leftEye.setTranslateY(-0.25 * headRadius);
         leftEye.setFill(eyeColor);
         
-        Polygon rightEye = new Polygon();
+        rightEye = new Polygon();
         rightEye.getPoints().addAll(
             new Double[] {
                0.0,            0.0,
@@ -110,7 +123,7 @@ public final class Player extends MovingGameObject {
         rightEye.setFill(eyeColor);
         
         // Mouth
-        Arc mouth = new Arc(
+        mouth = new Arc(
             0, headRadius / 2,
             headRadius / 2, headRadius / 4,
             -180, 180
@@ -127,9 +140,12 @@ public final class Player extends MovingGameObject {
     private float hatVerticalWidth;
     private float hatHorizontalWidth;
 
+    private final Color hatColor = Color.rgb(0, 0, 0);
+    private final Color hatColorShielded = Color.rgb(0, 0, 0, 0.5);
+    
+    private Rectangle hatVertical, hatHorizontal;
+    
     private Group drawHat() {
-        final Color hatColor = Color.BLACK;
-        
         hatVerticalWidth = 2 * playerWidth / 3;
         final float hatVerticalHeight = playerHeight / 4;
         final float hatVerticalX = -hatVerticalWidth / 2;
@@ -142,14 +158,14 @@ public final class Player extends MovingGameObject {
         
         Group hat = new Group();
         
-        Rectangle hatVertical = new Rectangle();
+        hatVertical = new Rectangle();
         hatVertical.setWidth(hatVerticalWidth);
         hatVertical.setHeight(hatVerticalHeight);
         hatVertical.setTranslateX(hatVerticalX);
         hatVertical.setTranslateY(hatVerticalY);
         hatVertical.setFill(hatColor);
         
-        Rectangle hatHorizontal = new Rectangle();
+        hatHorizontal = new Rectangle();
         hatHorizontal.setWidth(hatHorizontalWidth);
         hatHorizontal.setHeight(hatHorizontalHeight);
         hatHorizontal.setTranslateX(hatHorizontalX);
@@ -161,15 +177,22 @@ public final class Player extends MovingGameObject {
         return hat;
     }
     
+    private final Color capeFillColor = Color.rgb(255, 0, 0);
+    private final Color capeStrokeColor = Color.rgb(0, 0, 0);
+    
+    private final Color capeFillColorShielded = Color.rgb(255, 0, 0, 0.5);
+    private final Color capeStrokeColorShielded = Color.rgb(0, 0, 0, 0.5);
+    
+    private Path cape;
+    
     private Path drawCape(float capeHeight) {
         final Point2D bottomLeft = new Point2D(-0.5 * playerWidth, capeHeight);
         final Point2D bottomRight = new Point2D(0.5 * playerWidth, 0.9 * capeHeight);
         final Point2D control1 = new Point2D(-0.2 * playerWidth, 0.5 * capeHeight);
         final Point2D control2 = new Point2D(0.4 * playerWidth,  capeHeight);
-        final Color fillColor = Color.RED;
-        final Color strokeColor = Color.BLACK;
         
-        Path cape = new Path();
+        
+        cape = new Path();
         MoveTo startMove = new MoveTo(0, 0);
         LineTo leftLine = new LineTo(bottomLeft.getX(), bottomLeft.getY());
         CubicCurveTo bottomLine = new CubicCurveTo();
@@ -182,8 +205,8 @@ public final class Player extends MovingGameObject {
         ClosePath closePath = new ClosePath();
         
         cape.getElements().addAll(startMove, leftLine, bottomLine, closePath);
-        cape.setFill(fillColor);
-        cape.setStroke(strokeColor);
+        cape.setFill(capeFillColor);
+        cape.setStroke(capeStrokeColor);
         
         return cape;
     }
@@ -251,4 +274,46 @@ public final class Player extends MovingGameObject {
         return rectangle;
     }
 
+    @Override
+    public void update() {
+        super.update();
+        
+        if (shielded) {
+            long timeElapsed = System.nanoTime() - shieldedTime;
+
+            if (timeElapsed > 10000000l)
+                unshieldPlayer();
+        }
+    }
+    
+    public void shieldPlayer() {
+        shielded = true;
+        shieldedTime = System.nanoTime();
+        
+        face.setFill(faceColorShielded);
+        leftEye.setFill(eyeColorShielded);
+        rightEye.setFill(eyeColorShielded);
+        mouth.setFill(mouthFillColorShielded);
+        hatVertical.setFill(hatColorShielded);
+        hatHorizontal.setFill(hatColorShielded);
+        cape.setFill(capeFillColorShielded);
+        cape.setStroke(capeStrokeColorShielded);
+    }
+
+    public boolean isShielded() {
+        return shielded;
+    }
+    
+    public void unshieldPlayer() {
+        shielded = false;
+        
+        face.setFill(faceColor);
+        leftEye.setFill(eyeColor);
+        rightEye.setFill(eyeColor);
+        mouth.setFill(mouthFillColor);
+        hatVertical.setFill(hatColor);
+        hatHorizontal.setFill(hatColor);
+        cape.setFill(capeFillColor);
+        cape.setStroke(capeStrokeColor);
+    }
 }

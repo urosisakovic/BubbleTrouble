@@ -141,7 +141,7 @@ public final class Player extends MovingGameObject {
     private float hatHorizontalWidth;
 
     private final Color hatColor = Color.rgb(0, 0, 0);
-    private final Color hatColorShielded = Color.rgb(0, 0, 0, 0.5);
+    private final Color hatColorShielded = Color.rgb(0, 0, 0);
     
     private Rectangle hatVertical, hatHorizontal;
     
@@ -281,12 +281,14 @@ public final class Player extends MovingGameObject {
         if (shielded) {
             long timeElapsed = System.nanoTime() - shieldedTime;
 
-            if (timeElapsed > 10000000l)
+            if (timeElapsed > 10000000000l)
                 unshieldPlayer();
         }
     }
     
     public void shieldPlayer() {
+        System.out.println("Player SHIELDED");
+        
         shielded = true;
         shieldedTime = System.nanoTime();
         
@@ -305,6 +307,8 @@ public final class Player extends MovingGameObject {
     }
     
     public void unshieldPlayer() {
+        System.out.println("Player UNSHIELDED");
+        
         shielded = false;
         
         face.setFill(faceColor);

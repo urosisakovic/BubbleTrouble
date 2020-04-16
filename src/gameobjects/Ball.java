@@ -199,7 +199,7 @@ public class Ball extends MovingGameObject {
         }
     }
     
-    private void createDollarSign() {
+    private void createFallingBonus() {
         double creationProbability = Math.random();
         if (creationProbability > GameModel.getInstance().getFallingBonusProb())
             return;
@@ -233,7 +233,7 @@ public class Ball extends MovingGameObject {
         if (creationProbability <= 0.33) {
             GameModel.getInstance().addFallingBonus(dsb);
         }
-        else if (creationProbability <= 0.67) {
+        else if (creationProbability <= 0.66) {
             GameModel.getInstance().addFallingBonus(tb);
         }
         else
@@ -256,7 +256,7 @@ public class Ball extends MovingGameObject {
             if (this.getBoundsInParent().intersects(weapon.getBoundsInParent())) {
                 divide(true);
                 
-                createDollarSign();
+                createFallingBonus();
                 
                 GameModel.getInstance().setWeapon(null);
             }

@@ -13,9 +13,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -24,9 +22,9 @@ import javafx.scene.text.Text;
 public class GameModel {
 // GAME OBJECTS-----------------------------------------------------------------
     private final Group root = new Group();
+    private Background background = null;
     private Player player = null;
     private Weapon weapon = null;
-    private Background background;
     private Timer gameTimer = null;
     
     private final CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>();
@@ -45,48 +43,7 @@ public class GameModel {
     private boolean running = true;
     private AnimationTimer timer;
     private int lifeCount;
-//------------------------------------------------------------------------------
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     private int points = 0;
-    
-// GRADIENTS - move to Config---------------------------------------------------
-    private final LinearGradient backgroundColor;
-    private final LinearGradient wrapperBackgroundColor;
-    
-    {
-        Stop[] stops = new Stop[] {
-            new Stop(0, Color.YELLOW),
-            new Stop(1, Color.BLACK)
-        };
-        
-        backgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
-    }
-    
-    {
-        Stop[] stops = new Stop[] {
-            new Stop(0, Color.GRAY),
-            new Stop(0.2, Color.BLACK),
-            new Stop(0.4, Color.GRAY),
-            new Stop(0.6, Color.BLACK),
-            new Stop(0.8, Color.GRAY),
-            new Stop(1, Color.BLACK)
-        };
-        
-        wrapperBackgroundColor = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REPEAT, stops);
-    }
 //------------------------------------------------------------------------------
     
 // SINGLETON--------------------------------------------------------------------
@@ -96,9 +53,9 @@ public class GameModel {
         root.setScaleX(0.8);
         root.setScaleY(0.8);
         wrapper.getChildren().add(root);
-        scene = new Scene(wrapper, Config.sceneWidth, Config.sceneHeight);
+        scene = new Scene(wrapper, Config.SCENE_WIDTH, Config.SCENE_HEIGHT);
         
-        createAnimaTimer();
+        createAnimationTimer();
     }
     
     public static GameModel getInstance() {
@@ -110,7 +67,7 @@ public class GameModel {
 //------------------------------------------------------------------------------
   
 // TIMER------------------------------------------------------------------------
-    private void createAnimaTimer() {
+    private void createAnimationTimer() {
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -140,32 +97,8 @@ public class GameModel {
         timer.start();
     }
 //------------------------------------------------------------------------------   
-    public void addMoreTime(int sec) {
-        gameTimer.addMoreTime(sec);
-    }
-
-    public void shieldPlayer() {
-        if (player != null)
-            player.shieldPlayer();
-    }
-    
-    public void setGameTimer(Timer gameTimer) {
-        this.gameTimer = gameTimer;
-        wrapper.getChildren().add(this.gameTimer);
-    }
-    
-    public void incrementPoints(int inc) {
-        points += inc;
-        if (scoreSemaphore != null)
-            scoreSemaphore.setPoints(points);
-    }
-    
-    public void doublePoints() {
-        points *= 2;
-        if (scoreSemaphore != null)
-            scoreSemaphore.setPoints(points);
-    }
-    
+ 
+// ADD AND REMOVE GAME OBJECTS---------------------------------------------------
     public void setScoreSemaphore(ScoreSemaphore scoreSemaphore) {
         this.scoreSemaphore = scoreSemaphore;
         wrapper.getChildren().add(this.scoreSemaphore);
@@ -178,13 +111,13 @@ public class GameModel {
     
     public void setWrapperBackground(Background wrapperBackground) {
         this.wrapperBackground = wrapperBackground;
-        wrapper.getChildren().add(0, wrapperBackground);
+        wrapper.getChildren().add(0, this.wrapperBackground);
     }
     
     public void setPlayer(Player player) {
         this.player = player;
         root.getChildren().add(this.player);
-        player.initializeInScene(Config.playerStartX);
+        player.initializeInScene(Config.PLAYER_START_X);
     }
     
     public void setWeapon(Weapon weapon) {
@@ -225,7 +158,7 @@ public class GameModel {
         root.getChildren().remove(fallingBonus);
         fallingBonuses.remove(fallingBonus);
     }
-    
+//------------------------------------------------------------------------------
     
 // GAME CONTROLS----------------------------------------------------------------
     public void gameWon() {
@@ -235,8 +168,8 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.GREENYELLOW);
         
-        text.setX(0.35 * Config.sceneWidth); 
-        text.setY(0.6 * Config.sceneHeight); 
+        text.setX(0.35 * Config.SCENE_WIDTH); 
+        text.setY(0.6 * Config.SCENE_HEIGHT); 
         root.getChildren().add(text);
                 
         running = false;
@@ -249,8 +182,8 @@ public class GameModel {
         text.setFont(Font.font("Comic Sans", FontWeight.BOLD, FontPosture.REGULAR, 80));
         text.setFill(Color.RED);
         
-        text.setX(0.35 * Config.sceneWidth); 
-        text.setY(0.6 * Config.sceneHeight); 
+        text.setX(0.35 * Config.SCENE_WIDTH); 
+        text.setY(0.6 * Config.SCENE_HEIGHT); 
         root.getChildren().add(text);
                 
         running = false;
@@ -265,8 +198,8 @@ public class GameModel {
         
         float offset = 0;
         for (int i = 0; i < this.lifeCount; i++) {
-            LifeIcon newLifeIcon = new LifeIcon(offset, Config.lifeIconY, Config.lifeIconWidth);
-            offset += Config.lifeIconWidth * 1.4;
+            LifeIcon newLifeIcon = new LifeIcon(offset, Config.LIFE_ICON_Y, Config.LIFE_ICON_WIDTH);
+            offset += Config.LIFE_ICON_WIDTH * 1.4;
             
             lifeIcons.add(newLifeIcon);
             wrapper.getChildren().add(newLifeIcon);
@@ -282,20 +215,46 @@ public class GameModel {
         lifeIcons.remove(toRemove);
         wrapper.getChildren().remove(toRemove);
     }
+    
+    public void setGameTimer(Timer gameTimer) {
+        this.gameTimer = gameTimer;
+        wrapper.getChildren().add(this.gameTimer);
+    }
+    
+    public void addMoreTime(int sec) {
+        gameTimer.addMoreTime(sec);
+    }
+
+    public void shieldPlayer() {
+        if (player != null)
+            player.shieldPlayer();
+    }
+    
+    public void incrementPoints(int inc) {
+        points += inc;
+        if (scoreSemaphore != null)
+            scoreSemaphore.setPoints(points);
+    }
+    
+    public void doublePoints() {
+        points *= 2;
+        if (scoreSemaphore != null)
+            scoreSemaphore.setPoints(points);
+    }
 //------------------------------------------------------------------------------
     
     
 // GETTERS----------------------------------------------------------------------
     public float getMaxBallHeight(int size) {
-        return Config.fixBallOffset + size * Config.ballSizeOffset;
+        return Config.FIX_BALL_OFFSET + size * Config.BALL_SIZE_OFFSET;
     }
     
     public float getBallSizeOffset() {
-        return Config.ballSizeOffset;
+        return Config.BALL_SIZE_OFFSET;
     }
 
     public float getGravity() {
-        return Config.gravity;
+        return Config.GRAVITY;
     }
     
     public int getPoints() {
@@ -303,7 +262,7 @@ public class GameModel {
     }
     
     public String getGameName() {
-        return Config.gameName;
+        return Config.GAME_NAME;
     }
     
     public Scene getScene() {
@@ -311,47 +270,47 @@ public class GameModel {
     }
     
     public float getSceneHeight() {
-        return Config.sceneHeight;
+        return Config.SCENE_HEIGHT;
     }
 
     public float getSceneWidth() {
-        return Config.sceneWidth;
+        return Config.SCENE_WIDTH;
     }
 
     public float getPlayerHeight() {
-        return Config.playerHeight;
+        return Config.PLAYER_HEIGHT;
     }
 
     public float getPlayerStartX() {
-        return Config.playerStartX;
+        return Config.PLAYER_START_X;
     }
 
     public float getPlayerSpeed() {
-        return Config.playerSpeed;
+        return Config.PLAYER_SPEED;
     }
     
     public Color getStartBallColor() {
-        return Config.startBallColor;
+        return Config.START_BALL_COLOR;
     }
     
     public float getStartBallX() {
-        return Config.startBallX;
+        return Config.START_BALL_X;
     }
     
     public float getStartBallSpeedX() {
-        return Config.startBallSpeedX;
+        return Config.START_BALL_SPEED_X;
     }
 
     public float getStartBallSpeedY() {
-        return Config.startBallSpeedY;
+        return Config.START_BALL_SPEED_Y;
     }
 
     public float getStartBallRadius() {
-        return Config.startBallRadius;
+        return Config.START_BALL_RADIUS;
     }   
     
-    public float getBulletSpeed() {
-        return Config.bulletSpeed;
+    public float getWeaponSpeed() {
+        return Config.WEAPON_SPEED;
     }
 
     public Player getPlayer() {
@@ -363,47 +322,43 @@ public class GameModel {
     }
     
     public LinearGradient getBackgroundColor() {
-        return backgroundColor;
+        return Config.backgroundColor;
     }
     
     public LinearGradient getWrapperBackgroundColor() {
-        return wrapperBackgroundColor;
+        return Config.wrapperBackgroundColor;
     }
    
     public int getStartBallSize() {
-        return Config.startBallSize;
+        return Config.START_BALL_SIZE;
     }
     
     public float getFallingBonusProb() {
-        return Config.fallingBonusProb;
+        return Config.FALLING_BONUS_PROB;
     }
 
     public float getDollarSignWidth() {
-        return Config.dollarSignWidth;
+        return Config.BONUS_WIDTH;
     }
 
     public float getDollarSignHeight() {
-        return Config.dollarSignHeight;
+        return Config.BONUS_HEIGHT;
     }
 
     public float getDollarSignSpeed() {
-        return Config.dollarSignSpeed;
-    }
-    
-    public Color getDollarSignColor() {
-        return Config.dollarSignColor;
+        return Config.BONUS_SPEED;
     }
  
     public float getScoreSemaphoreX() {
-        return Config.scoreSemaphoreX;
+        return Config.SCORE_SEMAPHORE_X;
     }
 
     public float getScoreSemaphoreY() {
-        return Config.scoreSemaphoreY;
+        return Config.SCORE_SEMAPHORE_Y;
     }
     
     public float getBallAcceleration() {
-        return Config.ballAcceleration;
+        return Config.BALL_ACCELERATION;
     }
 //------------------------------------------------------------------------------
     

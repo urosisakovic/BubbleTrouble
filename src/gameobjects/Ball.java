@@ -209,8 +209,7 @@ public class Ball extends MovingGameObject {
             getY(),
             GameModel.getInstance().getDollarSignSpeed(),
             GameModel.getInstance().getDollarSignWidth(),
-            GameModel.getInstance().getDollarSignHeight(),
-            GameModel.getInstance().getDollarSignColor()
+            GameModel.getInstance().getDollarSignHeight()
         );
         
         TimerBonus tb = new TimerBonus(

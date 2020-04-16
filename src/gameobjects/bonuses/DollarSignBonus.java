@@ -10,13 +10,11 @@ import javafx.scene.text.Text;
 
 public final class DollarSignBonus extends FallingBonus {
     
-    private final Color color;
+    private final Color color = Color.GREEN;
         
-    public DollarSignBonus(float x, float y, float speedY, float width, float height, Color color) {
+    public DollarSignBonus(float x, float y, float speedY, float width, float height) {
         super(x, y, speedY, width, height);
-        
-        this.color = color;
-        
+                
         draw();
     }
     

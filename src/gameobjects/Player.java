@@ -64,7 +64,7 @@ public final class Player extends MovingGameObject {
         final float capeX = (float) headCenter.getX();
         final float capeY = (float) (headCenter.getY() + headRadius);
         final float  capeHeight = playerHeight - capeY;
-        Path cape = drawCape(capeHeight);
+        cape = drawCape(capeHeight);
         cape.setTranslateX(capeX);
         cape.setTranslateY(capeY);
         
@@ -222,11 +222,11 @@ public final class Player extends MovingGameObject {
                 case LEFT:
                     this.setSpeedX(-playerSpeed);
                     break;
-                case SPACE:
+                case SPACE:                    
                     Weapon weapon = new CurvyHarpoon(
                         getX() + playerWidth / 2,
                         getY(),
-                        GameModel.getInstance().getBulletSpeed()
+                        GameModel.getInstance().getWeaponSpeed()
                     );
                     GameModel.getInstance().setWeapon(weapon);
                     break;

@@ -8,8 +8,8 @@ import javafx.scene.shape.Polygon;
 
 public final class CurvyHarpoon extends Weapon {
     
-    private Arc[] left = new Arc[50];
-    private Arc[] right = new Arc[50];
+    private final Arc[] left = new Arc[50];
+    private final Arc[] right = new Arc[50];
     private int lastAdded = 0;
     
     public CurvyHarpoon(float x, float y, float speedY) {
@@ -21,7 +21,7 @@ public final class CurvyHarpoon extends Weapon {
     @Override
     public void update() {
         super.update();
-        
+                
         float length = GameModel.getInstance().getSceneHeight() 
             - getY();
         

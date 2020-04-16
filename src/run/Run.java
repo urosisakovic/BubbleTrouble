@@ -9,6 +9,7 @@ public class Run extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        // Create game objects
         Background wrapperBackground = new Background(
             GameModel.getInstance().getSceneWidth(), 
             GameModel.getInstance().getSceneHeight(),
@@ -54,6 +55,7 @@ public class Run extends Application {
             50, GameModel.getInstance().getSceneWidth()
         );
         
+        // Add object to the game
         GameModel.getInstance().setWrapperBackground(wrapperBackground);
         GameModel.getInstance().setBackground(background);
         GameModel.getInstance().setPlayer(player);
@@ -61,12 +63,16 @@ public class Run extends Application {
         GameModel.getInstance().addBall(ball1);
         GameModel.getInstance().addBall(ball2);
         GameModel.getInstance().setGameTimer(gameTimer);
-        GameModel.getInstance().setLifeCount(5);
+        GameModel.getInstance().setLifeCount(
+                GameModel.getInstance().getStartingLifeCount()
+        );
         
+        // Set stage
         stage.setScene(GameModel.getInstance().getScene());
         stage.setTitle(GameModel.getInstance().getGameName());
         stage.show();
         
+        // Start the game
         GameModel.getInstance().start();
     }
 

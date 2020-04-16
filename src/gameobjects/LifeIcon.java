@@ -20,6 +20,7 @@ public final class LifeIcon extends GameObject {
         draw();
     }
     
+// DRAWING METHODS--------------------------------------------------------------
     @Override
     protected void draw() {
         final float headRadius = width / 3;
@@ -130,5 +131,5 @@ public final class LifeIcon extends GameObject {
         
         return hat;
     }
-    
+//------------------------------------------------------------------------------
 }

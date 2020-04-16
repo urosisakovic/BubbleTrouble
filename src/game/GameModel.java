@@ -360,6 +360,10 @@ public class GameModel {
     public float getBallAcceleration() {
         return Config.BALL_ACCELERATION;
     }
-//------------------------------------------------------------------------------
     
+    public int getStartingLifeCount() {
+        return Config.STARTING_LIFE_COUNT;
+    }
+//------------------------------------------------------------------------------
+
 }

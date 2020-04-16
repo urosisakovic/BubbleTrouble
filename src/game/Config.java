@@ -17,6 +17,7 @@ public class Config {
     static final float PLAYER_START_X = 100;
     static final float PLAYER_SPEED = SCENE_WIDTH / 200;
     static final float WEAPON_SPEED = -5;
+    static final int STARTING_LIFE_COUNT = 5;
 //------------------------------------------------------------------------------
     
 // BALL SETTINGS----------------------------------------------------------------

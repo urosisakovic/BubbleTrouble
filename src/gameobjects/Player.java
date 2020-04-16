@@ -44,6 +44,7 @@ public final class Player extends MovingGameObject {
         addControls();
     }
         
+// DRAWING METHODS--------------------------------------------------------------
     @Override
     protected final void draw() {
         // Head
@@ -210,7 +211,9 @@ public final class Player extends MovingGameObject {
         
         return cape;
     }
+//------------------------------------------------------------------------------
     
+// PLAYER COMMANDS--------------------------------------------------------------
     private void addControls() {
         this.setFocusTraversable(true);
         
@@ -241,6 +244,7 @@ public final class Player extends MovingGameObject {
                 this.setSpeedX(0);
         });
     }
+//------------------------------------------------------------------------------
     
     @Override
     public void initializeInScene() {
@@ -251,11 +255,26 @@ public final class Player extends MovingGameObject {
         this.setY(sceneHeight - playerHeight);
     }
     
+// UPDATE, INIT-----------------------------------------------------------------
+    @Override
+    public void update() {
+        super.update();
+        
+        if (shielded) {
+            long timeElapsed = System.nanoTime() - shieldedTime;
+
+            if (timeElapsed > 10000000000l)
+                unshieldPlayer();
+        }
+    }
+    
     public void initializeInScene(float x) {
         this.setX(x);
         initializeInScene();
     }
+//------------------------------------------------------------------------------
 
+// COLLISION HANDLING-----------------------------------------------------------
     @Override
     protected void handleCollisions() {
         if (getX() > maxX)
@@ -273,19 +292,9 @@ public final class Player extends MovingGameObject {
                 
         return rectangle;
     }
+//------------------------------------------------------------------------------
 
-    @Override
-    public void update() {
-        super.update();
-        
-        if (shielded) {
-            long timeElapsed = System.nanoTime() - shieldedTime;
-
-            if (timeElapsed > 10000000000l)
-                unshieldPlayer();
-        }
-    }
-    
+// PLAYER SHIELDING-------------------------------------------------------------
     public void shieldPlayer() {        
         shielded = true;
         shieldedTime = System.nanoTime();
@@ -316,4 +325,5 @@ public final class Player extends MovingGameObject {
         cape.setFill(capeFillColor);
         cape.setStroke(capeStrokeColor);
     }
+//------------------------------------------------------------------------------
 }

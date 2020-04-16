@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
-public class Ball extends MovingGameObject {
+public final class Ball extends MovingGameObject {
 
     private float radius;
     private Color color;
@@ -26,6 +26,7 @@ public class Ball extends MovingGameObject {
     
     private boolean canKill = false;
         
+// CONSTRUCTORS-----------------------------------------------------------------
     public Ball(float x, float y, float speedX, float speedY, float radius, Color color, int size) {
         super(x, y, speedX, speedY);
         this.radius = radius;
@@ -47,7 +48,9 @@ public class Ball extends MovingGameObject {
     public Ball(float radius, Color color) {
         this(0, 0, 0, 0, radius, color);
     }
+//------------------------------------------------------------------------------
     
+// INIT, DRAW, UPDATE-----------------------------------------------------------
     @Override
     protected final void draw() {
         Circle circle = new Circle();
@@ -82,34 +85,9 @@ public class Ball extends MovingGameObject {
             }
         }
     }
+//------------------------------------------------------------------------------
     
-    @Override
-    protected void handleCollisions() {
-        handleBorderCollisions();
-        handlePlayerCollisions();
-        handleWeaponCollisions();
-    }
-    
-    protected void handleBorderCollisions() {
-        if (getX() > maxX) {
-            setX(maxX);
-            setSpeedX(-getSpeedX());
-        }
-        else if (getX() < minX) {
-            setX(minX);
-            setSpeedX(-getSpeedX());
-        }
-        
-        if (getY() > maxY) {
-            setY(maxY);
-            setSpeedY(-getSpeedY());
-        }
-        else if (getY() < minY) {
-            setY(minY);
-            setSpeedY(-getSpeedY());
-        }
-    }  
-    
+// PRIVATE COLLISION HANDLING HELPER METHODS------------------------------------
     private boolean intersects(Shape shape) {
         Circle circle = new Circle();
         circle.setRadius(radius);
@@ -118,6 +96,28 @@ public class Ball extends MovingGameObject {
         
         Shape intersection = Shape.intersect(shape, circle);
         return intersection.getBoundsInLocal().getWidth() > 0;
+    }
+    
+    private Color differentColor(Color color) {
+        Color[] colors = new Color[] {
+            Color.RED,
+            Color.AQUAMARINE,
+            Color.AQUA,
+            Color.CHOCOLATE,
+            Color.GREENYELLOW,
+            Color.BLUE,
+            Color.PURPLE,
+            Color.PINK,
+            Color.LIGHTGREY
+        };
+        
+        Random random = new Random();
+        Color diffColor;
+        while (true) {
+            diffColor = colors[Math.abs(random.nextInt()) % colors.length];
+            if (diffColor != color)
+                return diffColor;
+        }
     }
     
     private void divide(boolean countPoints) {
@@ -153,49 +153,6 @@ public class Ball extends MovingGameObject {
                     size - 1
                 )
             );
-        }
-    }
-    
-    private void handlePlayerCollisions() {
-        if (!canKill) {
-            return;
-        }
-        
-        Player player = GameModel.getInstance().getPlayer();
-        
-        if (player != null)
-            if (this.intersects(player.getShape())) {
-                if (player.isShielded()) {
-                    player.unshieldPlayer();
-                }
-                else {
-                    GameModel.getInstance().loseLife();
-                }
-                
-                canKill = false;
-                divide(false);
-            }
-    }
-    
-    private Color differentColor(Color color) {
-        Color[] colors = new Color[] {
-            Color.RED,
-            Color.AQUAMARINE,
-            Color.AQUA,
-            Color.CHOCOLATE,
-            Color.GREENYELLOW,
-            Color.BLUE,
-            Color.PURPLE,
-            Color.PINK,
-            Color.LIGHTGREY
-        };
-        
-        Random random = new Random();
-        Color diffColor;
-        while (true) {
-            diffColor = colors[Math.abs(random.nextInt()) % colors.length];
-            if (diffColor != color)
-                return diffColor;
         }
     }
     
@@ -247,6 +204,56 @@ public class Ball extends MovingGameObject {
         
         return v0;
     }
+//------------------------------------------------------------------------------
+    
+// COLLISION HANDLING-----------------------------------------------------------
+    @Override
+    protected void handleCollisions() {
+        handleBorderCollisions();
+        handlePlayerCollisions();
+        handleWeaponCollisions();
+    }
+    
+    protected void handleBorderCollisions() {
+        if (getX() > maxX) {
+            setX(maxX);
+            setSpeedX(-getSpeedX());
+        }
+        else if (getX() < minX) {
+            setX(minX);
+            setSpeedX(-getSpeedX());
+        }
+        
+        if (getY() > maxY) {
+            setY(maxY);
+            setSpeedY(-getSpeedY());
+        }
+        else if (getY() < minY) {
+            setY(minY);
+            setSpeedY(-getSpeedY());
+        }
+    }
+    
+    private void handlePlayerCollisions() {
+        if (!canKill) {
+            return;
+        }
+        
+        Player player = GameModel.getInstance().getPlayer();
+        
+        if (player != null)
+            if (this.intersects(player.getShape())) {
+                if (player.isShielded()) {
+                    player.unshieldPlayer();
+                }
+                else {
+                    GameModel.getInstance().loseLife();
+                }
+                
+                canKill = false;
+                divide(false);
+            }
+    }
     
     private void handleWeaponCollisions() {
         Weapon weapon = GameModel.getInstance().getWeapon();
@@ -261,13 +268,6 @@ public class Ball extends MovingGameObject {
             }
         }
     }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
+//------------------------------------------------------------------------------
     
 }
